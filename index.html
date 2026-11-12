@@ -1,0 +1,1981 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Event Directory Wireframes</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   Event Directory — mid-fi wireframes (front end only, no backend).
+   Visual language from the Commercial Summit 2026 logo and references:
+   near-black violet base, glowing magenta/violet/cyan light shapes,
+   photo-led cards, neon-lime day badges.
+   Photos are stand-ins (Lorem Picsum / Pravatar) with a brand duotone.
+   ===================================================================== */
+:root{
+  /* preview tool (neutral, so it is never mistaken for the design) */
+  --t-bg:#ececef; --t-panel:#fafafa; --t-ink:#18181b; --t-muted:#71717a; --t-line:#e0e0e5; --t-sel:#18181b;
+
+  /* site tokens */
+  --bg:#08050f; --surface:#120c1f; --surface-2:#1b1330; --line:rgba(255,255,255,.09);
+  --ink:#f6f3ff; --ink-2:#c3bbdc; --ink-3:#958db0;
+  --cyan:#00e0ff; --blue:#2a5bff; --violet:#9b3cff; --magenta:#ff3fc8; --lime:#c8ff3d;
+  --grad:linear-gradient(100deg,#00d4ff 0%,#2a5bff 45%,#b23cff 100%);
+  --r-lg:22px; --r-md:16px; --r-sm:12px;
+  --ease-out:cubic-bezier(.32,.72,0,1);          /* iOS sheet-like curve */
+  --font:"Zen Kaku Gothic New",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --note:#ffd84d;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--t-bg);color:var(--t-ink);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+img{display:block;max-width:100%}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ============================ preview tool ============================ */
+.app{display:grid;grid-template-columns:272px 1fr;height:100dvh;overflow:hidden}
+.side{background:var(--t-panel);border-right:1px solid var(--t-line);overflow-y:auto;padding:20px 16px 32px}
+.side h1{font-size:15px;margin:0 0 2px;letter-spacing:-.01em}
+.side .sub{color:var(--t-muted);font-size:12px;margin:0 0 20px}
+.side h2{font-size:11px;font-weight:600;color:var(--t-muted);margin:22px 0 8px;letter-spacing:.02em}
+.pg{display:flex;align-items:center;gap:8px;border-radius:10px}
+.pg > button{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:0;text-align:left;background:none;border:0;padding:8px 10px;border-radius:10px;cursor:pointer;min-height:44px;justify-content:center}
+.pg > button span{font-weight:600}
+.pg > button small{color:var(--t-muted);font-size:11.5px}
+.pg > button:hover{background:#efeff2}
+.pg > button[aria-current="true"]{background:var(--t-sel);color:#fff}
+.pg > button[aria-current="true"] small{color:#c9c9d1}
+.pg.off > button span{color:var(--t-muted);text-decoration:line-through}
+.sw{position:relative;width:36px;height:22px;flex:none;margin-right:6px}
+.sw input{appearance:none;margin:0;width:100%;height:100%;border-radius:999px;background:#d4d4da;cursor:pointer;transition:background .2s}
+.sw input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .25s var(--ease-out)}
+.sw input:checked{background:#22a35a}
+.sw input:checked::after{transform:translateX(14px)}
+.sw input:disabled{opacity:.5;cursor:default}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:40px;font-size:13px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:#e7e7eb;border-radius:10px;padding:3px}
+.seg button{border:0;background:none;border-radius:8px;padding:7px 0;cursor:pointer;font-weight:600;font-size:13px;color:var(--t-muted)}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--t-ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.side select{width:100%;border:1px solid var(--t-line);border-radius:8px;padding:7px 8px;background:#fff}
+.side .hint{color:var(--t-muted);font-size:11.5px;margin:6px 0 0}
+
+.stage{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.fit{position:relative;flex:none}
+.cap{margin:12px 0 0;color:var(--t-muted);font-size:12px;text-align:center}
+.tools-fab,.side-close{display:none}
+.tools-fab{position:fixed;z-index:250;top:calc(env(safe-area-inset-top,0px) + 8px);right:10px;width:44px;height:44px;place-items:center;border:1px solid rgba(255,255,255,.18);border-radius:50%;background:rgba(20,12,36,.6);color:#fff;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);cursor:pointer}
+.tools-fab:focus-visible,.side-close:focus-visible{outline:2px solid #6ee7ff;outline-offset:2px}
+.side label.lbl{display:block;font-size:12px;color:var(--t-muted);margin:12px 0 4px}
+
+/* ============================ device ============================ */
+.device{position:absolute;left:0;top:0;transform-origin:0 0;background:var(--bg);color:var(--ink);font-family:var(--font);overflow:hidden;isolation:isolate}
+/* Width and height come from the chosen device (Device > Size), set in fit(). Border is outside the viewport size. */
+.device.phone{border-radius:52px;border:10px solid #0b0b0d;box-shadow:0 30px 60px -20px rgba(30,10,70,.45),0 0 0 1px #2a2a2e inset}
+/* Safe area: the header (logo / nav bar) starts below the island, so the 60px bar is pushed down by 48px. */
+.device.island{--head-h:108px}
+.island .s-head{padding-top:48px}
+/* Dynamic Island on the iPhone sizes: 126 × 37 pill, 11px below the top edge of the screen. Drawn over the page, never clickable. */
+.device.island::after{content:"";position:absolute;z-index:100;top:11px;left:50%;width:126px;height:37px;margin-left:-63px;border-radius:999px;background:#000;pointer-events:none}
+.device.desktop{border-radius:14px;border:1px solid #1d1d22;box-shadow:0 30px 60px -30px rgba(30,10,70,.4)}
+.s-main{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
+.phone .s-main{padding-bottom:92px}
+.phone .s-main::-webkit-scrollbar{width:0}
+
+/* translucent chrome: content scrolls underneath */
+.s-head{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:16px;height:var(--head-h,60px);padding:0 18px;background:rgba(8,5,15,.55);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%)}
+.s-head::after{content:"";position:absolute;left:0;right:0;bottom:-16px;height:16px;background:linear-gradient(rgba(8,5,15,.35),transparent);pointer-events:none}
+.s-head .logo{height:54px;width:auto;margin-left:-8px}
+.desktop .s-head{height:72px;padding:0 40px}
+.desktop .s-head .logo{height:66px}
+.s-links{display:flex;gap:2px;margin-left:auto}
+.s-links button{background:none;border:0;padding:10px 14px;border-radius:999px;color:var(--ink-2);cursor:pointer;font-weight:500;font-size:15px}
+.s-links button:hover{color:var(--ink)}
+.s-links button[aria-current="page"]{color:var(--ink);background:rgba(255,255,255,.08)}
+/* 7 links (FAQ added): tighten link padding only when the header is narrow, so nothing spills over */
+.desktop .s-head{container-type:inline-size}
+@container (max-width:820px){ .s-links button{padding:10px 10px} }
+
+.s-bottom{position:absolute;left:12px;right:12px;bottom:14px;z-index:10;display:flex;padding:6px;border-radius:26px;background:rgba(24,16,40,.62);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);border:1px solid rgba(255,255,255,.1);box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.s-bottom button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;background:none;border:0;border-radius:20px;color:var(--ink-3);font-size:11px;font-weight:700;cursor:pointer;transition:transform .1s ease-out,background .2s}
+.s-bottom button:active{transform:scale(.94)}
+.s-bottom svg{width:23px;height:23px}
+.s-bottom button[aria-current="page"]{color:var(--ink);background:rgba(255,255,255,.1)}
+.s-bottom button[aria-current="page"] svg{color:var(--lime)}
+
+.scrim{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.5);animation:fade .25s ease-out}
+.sheet{position:absolute;left:8px;right:8px;bottom:8px;z-index:21;background:rgba(28,19,46,.92);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.1);border-radius:30px;padding:8px 8px 10px;transform-origin:85% 100%;animation:sheetIn .38s var(--ease-out)}
+.sheet .grab{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin:4px auto 8px}
+.sheet .item{display:flex;align-items:center;gap:14px;width:100%;padding:8px;background:none;border:0;border-radius:20px;color:var(--ink);cursor:pointer;text-align:left}
+.sheet .item:active{background:rgba(255,255,255,.06)}
+.sheet .thumb{width:64px;height:64px;border-radius:14px;overflow:hidden;flex:none}
+.sheet .item b{display:block;font-size:17px}
+.sheet .item small{color:var(--ink-3)}
+.sheet.closing{animation:sheetOut .22s ease-in forwards}
+.scrim.closing{animation:fadeOut .22s ease-in forwards}
+@keyframes sheetIn{from{transform:translateY(40px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+@keyframes sheetOut{to{transform:translateY(40px) scale(.96);opacity:0}}
+@keyframes fade{from{opacity:0}}
+@keyframes fadeOut{to{opacity:0}}
+
+/* ============================ imagery ============================ */
+/* Brand light-art (CSS only): echoes the glowing ring / ribbon references */
+.art{position:relative;overflow:hidden;background:#07040d}
+.art::before,.art::after{content:"";position:absolute;pointer-events:none}
+.art-ring::before{inset:-15% -25% -5% -5%;background:radial-gradient(closest-side circle at 58% 52%,transparent 52%,#ff3fc8 63%,#8d2bff 74%,rgba(42,91,255,.6) 82%,transparent 92%);filter:blur(16px)}
+.art-ring::after{inset:0;background:radial-gradient(40% 35% at 85% 10%,rgba(0,224,255,.35),transparent 70%),radial-gradient(60% 50% at 10% 100%,rgba(155,60,255,.35),transparent 70%)}
+.art-ribbon::before{inset:-30%;background:conic-gradient(from 210deg at 38% 58%,transparent 0deg,#ff3fc8 40deg,#9b3cff 80deg,rgba(42,91,255,.7) 115deg,transparent 150deg);filter:blur(26px)}
+.art-ribbon::after{inset:0;background:radial-gradient(35% 30% at 80% 85%,rgba(255,63,200,.45),transparent 70%)}
+.art-orb::before{inset:10% -20% -30% 20%;border-radius:50%;background:radial-gradient(circle at 40% 40%,#ff7ae0 0%,#b23cff 30%,#2a5bff 60%,transparent 72%);filter:blur(30px)}
+.art-orb::after{inset:0;background:radial-gradient(30% 25% at 15% 20%,rgba(0,224,255,.35),transparent 70%)}
+.art-gold::before{inset:-20%;background:radial-gradient(closest-side circle at 50% 60%,transparent 45%,#ffb84d 58%,#ff3fc8 70%,#8d2bff 80%,transparent 90%);filter:blur(18px)}
+.art > *{position:relative;z-index:1}
+
+/* Photos get a brand duotone so random stand-ins feel like one set */
+.photo{position:relative;overflow:hidden;background:var(--surface-2)}
+.photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.08) brightness(.95)}
+.photo::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,#00c8ff 0%,#3b4bff 45%,#c43cff 100%);mix-blend-mode:color;opacity:.9;pointer-events:none}
+.photo.natural img{filter:saturate(.85) contrast(1.05)}
+.photo.natural::after{display:none}
+.shade{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,transparent 35%,rgba(8,5,15,.55) 65%,rgba(8,5,15,.92) 100%);pointer-events:none}
+.on-img{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:16px}
+
+/* ============================ type + common ============================ */
+.wrap{padding:8px 18px 32px}
+.desktop .wrap{max-width:1120px;margin:0 auto;padding:24px 40px 56px}
+.display{font-weight:900;letter-spacing:-.025em;line-height:1.02;margin:0}
+.title{font-size:28px;font-weight:900;letter-spacing:-.02em;line-height:1.1;margin:0}
+.lead{color:var(--ink-2);font-size:16px;line-height:1.55;margin:8px 0 0}
+.sec{margin-top:36px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 14px}
+.sec-h h3{margin:0;font-size:20px;font-weight:900;letter-spacing:-.015em}
+.sec-h .more{background:none;border:0;padding:8px 0;color:var(--ink-2);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:14px}
+.ic{width:18px;height:18px;flex:none}
+.meta{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--ink-2);font-size:14px}
+.meta span{display:inline-flex;align-items:center;gap:6px}
+.ph{color:var(--ink-3)}            /* placeholder content */
+.press{transition:transform .12s ease-out}
+.press:active{transform:scale(.97)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 22px;border-radius:999px;border:0;font-weight:700;font-size:16px;cursor:pointer;text-decoration:none;transition:transform .12s ease-out,opacity .2s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:#fff;color:#0c0818}
+.btn-glass{background:rgba(255,255,255,.14);color:#fff;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.18)}
+.btn-wa{background:#25d366;color:#062b14}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+.badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:26px;padding:0 8px;border-radius:8px;background:var(--lime);color:#111;font-weight:900;font-size:13px;letter-spacing:-.01em}
+.pill{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:999px;background:rgba(255,255,255,.1);color:var(--ink);font-size:12.5px;font-weight:700;backdrop-filter:blur(10px)}
+
+.empty{position:relative;border-radius:var(--r-lg);overflow:hidden;min-height:260px;display:grid;place-items:end start}
+.empty .on-img b{display:block;font-size:22px;font-weight:900;letter-spacing:-.015em}
+.empty .on-img span{color:var(--ink-2)}
+
+/* brief notes (off by default) */
+.note{display:none;margin:10px 0;padding:8px 12px;border-radius:10px;background:rgba(255,216,77,.1);border:1px solid rgba(255,216,77,.3);color:var(--note);font:12px/1.45 system-ui,sans-serif}
+.show-notes .note{display:block}
+
+/* ============================ home ============================ */
+.hero{position:relative;height:520px;margin-top:-60px;display:flex;align-items:flex-end}
+.hero .content{position:relative;z-index:3;padding:0 18px 26px;width:100%}
+.hero .kicker{display:flex;gap:8px;margin-bottom:14px}
+.phone .hero .kicker{flex-direction:column;align-items:flex-start}   /* phone: one pill per line */
+.hero h2{font-size:48px;letter-spacing:-.032em;text-wrap:balance}
+.hero .meta{margin-top:14px;font-size:15px;color:#e4defa}
+.desktop .hero{height:600px;margin-top:-72px}
+.desktop .hero .content{max-width:1120px;margin:0 auto;padding:0 40px 56px}
+.desktop .hero h2{font-size:96px;max-width:900px}
+.desktop .hero{container-type:inline-size}
+@container (max-width:780px){ .desktop .hero h2{font-size:72px} }   /* narrow desktop frame: keep the headline clear of the header */
+
+.day-list{border-radius:var(--r-lg);background:var(--surface);overflow:hidden}
+.day-list .s{display:grid;grid-template-columns:58px 1fr;gap:12px;padding:14px 16px;border-top:1px solid var(--line)}
+.day-list .s:first-child{border-top:0}
+.day-list .t{font-weight:900;font-variant-numeric:tabular-nums;font-size:15px}
+.day-list .n{font-weight:700}
+.day-list .r{color:var(--ink-3);font-size:13px}
+.day-list .t abbr{text-decoration:none;cursor:help;color:var(--ink-3)}
+.day-list .s-role{min-width:0;height:22px;margin-top:6px;padding:0 8px;border-radius:6px;font-size:12px;white-space:nowrap}
+
+.venue-card{position:relative;border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/3}
+.venue-card .photo{position:absolute;inset:0}
+.venue-card .on-img{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.venue-card b{display:block;font-size:20px;letter-spacing:-.01em}
+
+.portrait{position:relative;border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/5;background:var(--surface-2)}
+.portrait .photo{position:absolute;inset:0}
+.portrait .top{position:absolute;top:14px;left:14px;right:14px;z-index:3;display:flex;justify-content:space-between}
+.portrait .nm{font-size:26px;font-weight:900;letter-spacing:-.02em;line-height:1.05}
+.portrait .rl{color:#ddd6f5;font-size:14px;margin-top:4px}
+
+.hl-grid{display:grid;gap:12px}
+.hl{position:relative;border-radius:var(--r-md);overflow:hidden;aspect-ratio:16/9}
+.hl .photo{position:absolute;inset:0}
+.hl .on-img{font-weight:700;font-size:16px}
+.desktop .home-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:stretch}
+/* Home FAQ banner: brand light-art surface, the whole block is the button */
+.hcta{display:flex;flex-direction:column;align-items:flex-start;gap:14px;width:100%;min-height:190px;padding:24px;border:1px solid rgba(255,255,255,.14);border-radius:var(--r-lg);color:var(--ink);text-align:left;cursor:pointer;transition:transform .12s ease-out,border-color .2s}
+.hcta:hover{border-color:rgba(255,255,255,.3)}
+.hcta:active{transform:scale(.985)}
+.hcta .hcta-veil{position:absolute;inset:0;z-index:0;background:linear-gradient(100deg,rgba(8,5,15,.82) 0%,rgba(8,5,15,.55) 55%,rgba(8,5,15,.15) 100%)}   /* keeps the text readable over the light art */
+.hcta-ic{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);color:var(--cyan)}
+.hcta-ic .ic{width:22px;height:22px}
+.hcta-tx b{display:block;font-size:24px;line-height:1.15;font-weight:900;letter-spacing:-.02em}
+.hcta-tx small{display:block;margin-top:6px;font-size:14.5px;line-height:1.5;color:var(--ink-2)}
+.hcta-btn{margin-top:auto;min-height:44px;padding:0 18px;font-size:14px}
+.hcta-btn .ic{transition:transform .25s var(--ease-out)}
+.hcta:hover .hcta-btn .ic{transform:translateX(3px)}
+/* desktop: right column fills the row, so the banner's bottom lines up with the venue card */
+.desktop .hg-side{display:flex;flex-direction:column}
+.desktop .hcta-sec{flex:1;display:flex;flex-direction:column}
+.desktop .hcta{flex:1;flex-direction:row;align-items:center;gap:16px;min-height:0;padding:22px 24px}
+.desktop .hcta-ic{display:none}                      /* desktop: no icon, text and button only */
+.desktop .hcta-tx{flex:1;min-width:0}
+.desktop .hcta-btn{margin:0;flex:none}
+/* narrow right column: drop the icon and tighten type so the text keeps a readable width */
+.desktop .hg-side{container-type:inline-size}
+@container (max-width:440px){
+  .desktop .hcta{gap:12px;padding:18px 18px 18px 20px}
+  .desktop .hcta-ic{display:none}
+  .desktop .hcta-tx b{font-size:19px}
+  .desktop .hcta-tx small{font-size:13px}
+  .desktop .hcta-btn{padding:0 14px}
+}
+@container (max-width:330px){
+  .desktop .hcta{flex-direction:column;align-items:flex-start}
+  .desktop .hcta-btn{margin-top:auto}
+}
+.desktop .hl-grid{grid-template-columns:repeat(3,1fr)}
+.desktop .hl{aspect-ratio:4/3}
+
+/* ============================ agenda ============================ */
+/* Brief: one row of day tabs, one Dress code panel for the whole page, session cards
+   (time / title / speaker / hotel + room / role badge). All agenda text is 18px or larger, with generous space between cards. */
+.ag-lead{font-size:18px}
+
+/* day tabs: a segmented control on a translucent bar that sticks under the header */
+.daytabs{position:sticky;top:var(--head-h,60px);z-index:5;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;margin:22px 0 0;border-radius:18px;
+  background:rgba(27,19,48,.78);border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 24px -8px rgba(0,0,0,.5);
+  backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%)}
+.desktop .daytabs{top:72px}
+/* the white selection is one shape that slides from the previous day to the chosen one */
+.daytabs::before{content:"";position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 20px) / 4);border-radius:14px;background:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);transform:translateX(calc(var(--i, 0) * (100% + 4px)));transition:transform .42s var(--ease-out)}
+.daytabs button{position:relative;min-height:54px;border:0;border-radius:14px;background:none;color:var(--ink-2);font-size:18px;font-weight:800;
+  letter-spacing:-.01em;font-variant-numeric:tabular-nums;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:color .3s ease,transform .12s ease-out}
+.daytabs button:hover{color:var(--ink)}
+.daytabs button:active{transform:scale(.95)}
+.daytabs button[aria-selected="true"]{color:#0c0818}
+.daytabs button:focus-visible{outline-offset:-3px}
+.daytabs .today{position:absolute;left:50%;bottom:7px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--lime)}
+.daytabs button[aria-selected="true"] .today{background:#2e9a00}
+
+/* Dress code groups: sessions sit under the dress code they share; groups sit further apart than cards (proximity) */
+.dc{margin-top:30px}
+.ag-day + .dc{margin-top:22px}
+.dc-h{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;margin:0 0 12px;font-size:18px;line-height:1.3;font-weight:600;color:var(--ink-3)}
+.dc-ic{display:grid;place-items:center;width:38px;height:38px;flex:none;border-radius:12px;background:rgba(255,184,77,.14);color:#ffd28a}
+.dc-ic .ic{width:22px;height:22px}
+.dc-h b{font-size:20px;font-weight:900;letter-spacing:-.01em;color:#ffd28a}
+.ag-name{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:999px;background:rgba(255,255,255,.16);color:#fff;font-weight:800}
+
+/* the chosen day: brand light-art header, then its sessions */
+.ag-panel{margin-top:22px}
+.ag-panel.fwd{--dx:28px;animation:agIn .36s var(--ease-out) both}
+.ag-panel.back{--dx:-28px;animation:agIn .36s var(--ease-out) both}
+@keyframes agIn{from{opacity:0;transform:translateX(var(--dx))}}
+.ag-day{position:relative;display:flex;align-items:flex-end;min-height:132px;padding:18px 20px;border-radius:var(--r-lg)}
+.ag-day-in{position:relative;z-index:3}
+.ag-eye{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0;font-size:18px;font-weight:700;color:#e4defa}
+.ag-today{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:999px;background:var(--lime);color:#0c0818;font-weight:800}
+.ag-date{margin:6px 0 0;font-size:30px;font-weight:900;letter-spacing:-.025em;line-height:1.1;text-wrap:balance}
+
+.ag-list{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.ag{display:grid;gap:10px;padding:18px 20px 20px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line)}
+.ag-t{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin:0;font-size:22px;font-weight:900;line-height:1.25;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.ag-t.tbc{font-size:20px;font-weight:700;color:var(--ink-3)}
+.ag-t .ic{width:20px;height:20px}
+.ag-cnt{font-size:18px;font-weight:600;color:var(--ink-3);letter-spacing:0}
+.ag-main{display:grid;gap:8px;min-width:0}
+.ag-h{display:flex;align-items:flex-start;gap:10px;margin:0;font-size:20px;font-weight:800;line-height:1.3;letter-spacing:-.01em;text-wrap:pretty}
+.ag-note{display:flex;align-items:flex-start;gap:8px;margin:0;font-size:18px;line-height:1.45;color:var(--ink-2)}
+.ag-note .ic{margin-top:3px;color:var(--cyan)}
+.ag-loc{display:flex;align-items:flex-start;gap:8px;margin:0;font-size:18px;line-height:1.4;color:var(--ink-2)}
+.ag-loc .ic{margin-top:3px;color:var(--ink-3)}
+/* speaker on its own line: a link to their card on Speakers (44px tall target) */
+.ag-spk{display:flex;align-items:center;gap:10px;width:max-content;max-width:100%;min-height:44px;margin:-2px 0;padding:0 6px 0 0;border:0;border-radius:999px;background:none;
+  color:var(--cyan);font-size:18px;font-weight:700;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ag-spk .ag-av{width:34px;height:34px;flex:none;border-radius:50%}
+.ag-spk .ic{transition:transform .25s var(--ease-out)}
+.ag-spk:hover .ic{transform:translateX(3px)}
+.ag-spk:active{opacity:.65}
+.ag-spk.static{color:var(--ink);cursor:default}
+/* role badge: words, strong contrast, only on role-specific sessions */
+.ag-role{margin:4px 0 0}
+.role{display:inline-flex;align-items:center;min-height:34px;padding:4px 12px;border-radius:10px;background:var(--lime);color:#0c0818;font-size:18px;font-weight:800;line-height:1.2}
+/* transfer: logistics, so a quieter outlined card; the journey replaces the hotel */
+.ag.transfer{background:transparent;border:1.5px dashed rgba(255,255,255,.2)}
+/* sessions sharing one time: one block, joined by a rail */
+.ag.pair .ag-main{position:relative;gap:0;padding-left:18px}
+.ag.pair .ag-main::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:linear-gradient(180deg,var(--cyan),var(--violet))}
+.ag-item{display:grid;gap:6px;padding:10px 0}
+.ag-item:first-child{padding-top:2px}
+.ag-item:last-child{padding-bottom:0}
+.ag-item + .ag-item{border-top:1px solid var(--line)}
+
+/* desktop: time in its own column so the day scans like a schedule; text keeps a readable width */
+.desktop .ag-panel{margin-top:26px}
+.desktop .ag-day{min-height:150px;padding:24px 28px}
+.desktop .ag-date{font-size:36px}
+.desktop .ag-list{gap:16px}
+.desktop .dc{margin-top:36px}
+.desktop .ag-day + .dc{margin-top:26px}
+.desktop .ag{grid-template-columns:220px minmax(0,1fr);column-gap:28px;padding:24px 28px}
+.desktop .ag-t{align-self:start}
+.desktop .ag-main{max-width:680px}
+.flash{animation:flash 1.8s ease}
+@keyframes flash{0%,35%{box-shadow:0 0 0 3px var(--lime)}100%{box-shadow:0 0 0 3px transparent}}
+
+/* ============================ speakers ============================ */
+.grp{margin:28px 0 12px;font-size:15px;font-weight:900;color:var(--ink-2)}
+.sp-grp .grp{display:flex;align-items:baseline;gap:8px;margin:32px 0 6px;font-size:18px;color:var(--ink);letter-spacing:-.01em}
+.sp-grp:first-of-type .grp{margin-top:24px}
+.grp-n{font-size:13px;font-weight:700;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.desktop .sp-grp .grp{font-size:22px;margin-top:44px}
+/* numbered rows (reference layout): number, square photo, day pills, name, role, +/- toggle.
+   Tapping a row opens the bio in place; the open row lifts onto a tinted surface. One open at a time. */
+.sp-list{list-style:none;margin:0;padding:0}
+.sp{position:relative;border:1px solid transparent;border-bottom-color:var(--line);border-radius:0;
+  transition:background .3s ease,border-color .3s ease,border-radius .3s ease}
+.sp[data-open="true"]{background:linear-gradient(110deg,rgba(155,60,255,.14),rgba(42,91,255,.08) 55%,rgba(0,224,255,.04));border-color:rgba(255,255,255,.13);border-radius:20px}
+.sp:has(+ .sp[data-open="true"]){border-bottom-color:transparent}   /* no double line above an open row */
+/* phone: everything top-aligned, so the small toggle lines up with the first line of text */
+.sp-head{display:grid;grid-template-columns:84px minmax(0,1fr) 30px;align-items:start;gap:14px;width:100%;padding:14px 10px;border:0;background:none;color:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sp-head:active .sp-th{transform:scale(.97)}
+.sp-no{display:none}
+.sp-th{display:block;width:100%;aspect-ratio:1/1;border-radius:14px;transition:transform .12s ease-out}
+/* eyebrow line: number (phone only) + day pills, same place on every row */
+.sp-tx{display:grid;gap:3px;min-width:0}
+.sp-eye{display:flex;align-items:center;gap:8px;min-height:20px;margin-bottom:3px;white-space:nowrap}
+.sp-no-in{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.sp-days{display:inline-flex;gap:4px}
+.sp-days .badge{min-width:0;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;white-space:nowrap}
+.sp-nm{font-size:20px;line-height:1.15;font-weight:900;letter-spacing:-.02em;color:var(--ink)}
+.sp-rl{font-size:13px;line-height:1.4;color:var(--ink-3)}
+.sp-rl i{display:inline-block;width:3px;height:3px;margin:0 7px 3px;border-radius:50%;background:var(--ink-3);vertical-align:middle}
+/* phone: 30 px circle at the top right (the whole row is the tap target, so it can stay small) */
+.sp-tg{position:relative;display:grid;place-items:center;width:30px;height:30px;margin-top:-5px;border-radius:50%;border:1px solid rgba(255,255,255,.22);color:var(--cyan);transition:background .2s,border-color .2s}
+.desktop .sp-tg{width:44px;height:44px;margin-top:0}
+.sp-tg::before,.sp-tg::after{content:"";position:absolute;width:11px;height:1.6px;border-radius:1px;background:currentColor;transition:transform .35s var(--ease-out)}
+.sp-tg::after{transform:rotate(90deg)}
+.sp[data-open="true"] .sp-tg::after{transform:rotate(0)}          /* plus folds into minus */
+.sp-head:hover .sp-tg{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.4)}
+/* in-place expand: rows animate 0fr → 1fr; hidden content leaves the tab order */
+.sp-body{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .38s var(--ease-out),visibility 0s .38s}
+.sp[data-open="true"] .sp-body{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows .38s var(--ease-out),visibility 0s}
+.sp-in{min-height:0;overflow:hidden}
+.sp-in > div{padding:2px 10px 18px;opacity:0;transform:translateY(-6px);transition:opacity .25s ease,transform .38s var(--ease-out)}
+.sp[data-open="true"] .sp-in > div{opacity:1;transform:none;transition-delay:.06s}
+.sp-bio{margin:0 0 10px;color:var(--ink-2);font-size:15px;line-height:1.6}
+.sp-sess{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:0;border:0;background:none;color:var(--cyan);font-size:14px;font-weight:700;text-align:left;cursor:pointer}
+.sp-sess .badge{min-width:0;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;white-space:nowrap}
+.sp-sess .ph{color:inherit;opacity:.75}
+.sp-sess .ic{flex:none;transition:transform .25s var(--ease-out)}
+.sp-sess:hover .ic{transform:translateX(3px)}
+.sp-sess.static{cursor:default;color:var(--ink-2)}
+.desktop .sp-head{grid-template-columns:40px 120px minmax(0,1fr) 44px;align-items:center;gap:24px;padding:18px 24px}
+.desktop .sp-tg::before,.desktop .sp-tg::after{width:14px;height:1.8px}
+.desktop .sp-eye:not(:has(.sp-days)){display:none}
+.desktop .sp-no{display:block;font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums;letter-spacing:.06em}
+.desktop .sp-no-in{display:none}
+.desktop .sp-nm{font-size:26px}
+.desktop .sp-rl{font-size:14px}
+.desktop .sp-in > div{padding:0 92px 24px 232px}   /* aligns with the text column: 24 + 40 + 24 + 120 + 24 */
+.desktop .sp-bio{max-width:640px}
+
+/* ============================ venue ============================ */
+.venue-hero{position:relative;height:420px;margin:-68px -18px 0;display:flex;align-items:flex-end}
+.venue-hero .photo{position:absolute;inset:0}
+.venue-hero .on-img{position:relative;padding:0 18px 22px}
+.desktop .venue-hero{margin:-96px -40px 0;border-radius:0 0 var(--r-lg) var(--r-lg);height:520px}
+.desktop .venue-hero .on-img{padding:0 40px 40px}
+.map{position:relative;height:180px;border-radius:var(--r-lg);overflow:hidden;background:
+  linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px) 0 0/28px 28px,
+  linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px) 0 0/28px 28px,
+  linear-gradient(115deg,transparent 46%,rgba(155,60,255,.35) 46%,rgba(155,60,255,.35) 50%,transparent 50%),
+  linear-gradient(25deg,transparent 60%,rgba(0,224,255,.25) 60%,rgba(0,224,255,.25) 63%,transparent 63%),
+  var(--surface)}
+.map .pin{position:absolute;left:50%;top:46%;transform:translate(-50%,-100%);color:var(--lime)}
+.map .pin svg{width:40px;height:40px;filter:drop-shadow(0 4px 10px rgba(200,255,61,.5))}
+.map small{position:absolute;left:12px;bottom:10px;color:var(--ink-3);font-size:11px}
+
+/* desktop venue: one joined block, map left + venue panel right, sharing one height and one outline */
+.vd{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);margin-top:16px;border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);overflow:hidden;background:var(--surface)}
+.vd-map{display:block;height:auto;min-height:440px;border-radius:0}
+.vd-map:hover .pin svg{filter:drop-shadow(0 6px 14px rgba(200,255,61,.7))}
+.vd-panel{display:flex;flex-direction:column;border-left:1px solid rgba(255,255,255,.1);
+  background:radial-gradient(120% 60% at 100% 0%,rgba(155,60,255,.22),transparent 65%),var(--surface)}
+/* photo is an inset rectangle with the panel's own padding around it, not edge to edge */
+.vd-photo{padding:24px 24px 0}
+.vd-photo .photo{aspect-ratio:3/2;border-radius:12px}
+.vd-body{display:flex;flex-direction:column;flex:1;padding:20px 24px 24px}
+.vd-name{margin:0;font-size:28px;line-height:1.1;font-weight:900;letter-spacing:-.02em}
+.vd-addr{display:flex;align-items:flex-start;gap:10px;margin:12px 0 24px;font-size:15px;line-height:1.5;color:var(--ink-2)}
+.vd-addr .ic{flex:none;margin-top:2px;color:var(--cyan)}
+.vd-body .btn{margin-top:auto}                       /* action sits at the bottom of the panel */
+.vd-hint{margin:14px 0 0;font-size:13.5px;color:var(--ink-3);text-align:center}
+.vd-hint button{padding:0;border:0;background:none;color:var(--cyan);font:inherit;font-weight:700;cursor:pointer}
+
+/* ============================ gallery ============================ */
+.gal{display:grid;gap:12px}
+.desktop .gal{grid-template-columns:repeat(2,1fr);gap:16px}   /* 4 albums: 2 x 2 */
+.album{position:relative;display:block;border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/3;border:0;padding:0;color:inherit;text-decoration:none;width:100%;background:none;text-align:left}
+.album .photo{position:absolute;inset:0}
+.album .stack{position:absolute;inset:0;display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:3px}
+.album .stack .photo{position:relative;inset:auto}
+.album .stack .photo:first-child{grid-row:1/3}
+.album .on-img{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.album b{display:block;font-size:20px;font-weight:900;letter-spacing:-.015em}
+.album small{color:var(--ink-2)}
+.album.locked{cursor:not-allowed}
+.album.locked .stack{filter:blur(14px) brightness(.55);transform:scale(1.1)}
+.album .lock{position:absolute;inset:0;z-index:3;display:grid;place-items:center;align-content:center;gap:8px;text-align:center;color:var(--ink)}
+.album .lock svg{width:30px;height:30px;padding:12px;box-sizing:content-box;border-radius:50%;background:rgba(255,255,255,.12);backdrop-filter:blur(10px)}
+.album .lock b{font-size:17px}
+.album .go{width:44px;height:44px;border-radius:50%;background:#fff;color:#0c0818;display:grid;place-items:center;flex:none}
+
+/* ============================ forms ============================ */
+.form{display:grid;gap:16px}
+.field label,.field legend{display:block;font-weight:700;font-size:14px;margin-bottom:8px;padding:0}
+.field input,.field select,.field textarea{width:100%;min-height:52px;padding:14px 16px;border-radius:var(--r-sm);border:1px solid transparent;background:var(--surface-2);color:var(--ink);font-size:16px;transition:border-color .2s,background .2s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:rgba(255,255,255,.5);background:#21183a}
+.field textarea{min-height:130px;resize:vertical}
+.field .help{font-size:13px;color:var(--ink-3);margin-top:6px}
+.req{color:var(--magenta)}
+fieldset.field{border:0;margin:0;padding:0;min-width:0}
+.done{position:relative;border-radius:var(--r-lg);overflow:hidden;min-height:300px;display:flex;align-items:flex-end}
+.done .on-img{position:relative}
+.done .tick{width:56px;height:56px;border-radius:50%;background:#fff;color:#0c0818;display:grid;place-items:center;margin-bottom:14px}
+.done b{display:block;font-size:26px;font-weight:900;letter-spacing:-.02em}
+.done p{margin:6px 0 0;color:var(--ink-2)}
+
+/* ============================ contact / registration ============================ */
+.org{display:flex;align-items:center;gap:14px;padding:14px;border-radius:var(--r-lg);background:var(--surface)}
+.org .photo{width:64px;height:64px;border-radius:50%;flex:none}
+.org b{display:block;font-size:17px}
+.org small{color:var(--ink-3)}
+.rel{display:grid;gap:8px}
+.rel a{display:flex;align-items:center;gap:12px;padding:8px 14px 8px 8px;border-radius:var(--r-md);background:var(--surface);color:var(--ink);text-decoration:none;min-height:64px}
+.rel .thumb{width:48px;height:48px;border-radius:10px;overflow:hidden;flex:none}
+.rel small{display:block;color:var(--ink-3)}
+.rel .ic{margin-left:auto;color:var(--ink-3)}
+/* brand art inside small thumbnails (FAQ useful links, More menu): give it a height and a smaller blur so it paints */
+.rel .thumb > .art,.sheet .thumb > .art{height:100%}
+.rel .thumb > .art::before,.sheet .thumb > .art::before{filter:blur(7px)}
+.rel a{transition:background .2s,transform .12s ease-out}
+.rel a:hover{background:var(--surface-2)}
+.rel a:active{transform:scale(.98)}
+
+/* contact: single readable column on desktop */
+.desktop .ct{max-width:720px}
+.faq-nudge{display:flex;align-items:center;gap:14px;width:100%;min-height:64px;margin-top:10px;padding:12px 14px;border:1px solid rgba(0,224,255,.22);border-radius:var(--r-lg);
+  background:linear-gradient(110deg,rgba(0,224,255,.10),rgba(42,91,255,.06) 60%,rgba(155,60,255,.06));color:var(--ink);text-align:left;cursor:pointer;transition:background .2s,border-color .2s}
+.faq-nudge:hover{border-color:rgba(0,224,255,.45)}
+.fn-ic{display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:50%;background:rgba(0,224,255,.14);color:var(--cyan)}
+.fn-ic .ic{width:20px;height:20px}
+.fn-tx{display:grid;gap:1px;min-width:0}
+.fn-tx b{font-size:16px}
+.fn-tx small{font-size:13px;color:var(--ink-2)}
+.faq-nudge > .ic{margin-left:auto;color:var(--ink-3)}
+.ct-wa-sub{margin:10px 0 0;text-align:center;font-size:13px;color:var(--ink-3)}
+
+/* ============================ FAQ ============================ */
+.desktop .fq-page{max-width:820px}
+.fq-links .rel a{min-height:64px}
+.fq-grp{margin-top:32px}
+.fq-grp h3{display:flex;align-items:baseline;gap:8px;margin:0 0 4px;font-size:18px;font-weight:900;letter-spacing:-.01em}
+.fq-grp h3 small{font-size:13px;font-weight:700;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.fq-list{list-style:none;margin:0;padding:0}
+.fq{border:1px solid transparent;border-bottom-color:var(--line);border-radius:0;transition:background .3s ease,border-color .3s ease,border-radius .3s ease}
+.fq[data-open="true"]{background:linear-gradient(110deg,rgba(155,60,255,.12),rgba(42,91,255,.07) 55%,rgba(0,224,255,.03));border-color:rgba(255,255,255,.13);border-radius:18px}
+.fq:has(+ .fq[data-open="true"]){border-bottom-color:transparent}
+.fq-q{display:grid;grid-template-columns:minmax(0,1fr) 30px;align-items:start;gap:14px;width:100%;min-height:56px;padding:16px 12px;border:0;background:none;color:var(--ink);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fq-q span:first-child{font-size:16px;font-weight:700;line-height:1.4;letter-spacing:-.005em}
+.fq-q:active span:first-child{opacity:.7}
+.fq .sp-tg{margin-top:-4px}
+.fq[data-open="true"] .sp-tg::after{transform:rotate(0)}
+.fq-q:hover .sp-tg{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.4)}
+.fq-a{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .38s var(--ease-out),visibility 0s .38s}
+.fq[data-open="true"] .fq-a{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows .38s var(--ease-out),visibility 0s}
+.fq-a > div{min-height:0;overflow:hidden}
+.fq-a > div > div{padding:0 12px 18px;opacity:0;transform:translateY(-6px);transition:opacity .25s ease,transform .38s var(--ease-out)}
+.fq[data-open="true"] .fq-a > div > div{opacity:1;transform:none;transition-delay:.06s}
+.fq-a p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.65}
+.fq-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;margin-top:6px;padding:0;border:0;background:none;color:var(--cyan);font-size:14px;font-weight:700;cursor:pointer}
+.fq-link .ic{transition:transform .25s var(--ease-out)}
+.fq-link:hover .ic{transform:translateY(-2px)}
+.desktop .fq-q{padding:18px 16px}
+.desktop .fq-q span:first-child{font-size:17px}
+.desktop .fq .sp-tg{width:36px;height:36px;margin-top:-6px}
+.desktop .fq-q{grid-template-columns:minmax(0,1fr) 36px}
+.desktop .fq-a > div > div{padding:0 68px 20px 16px}
+.fq-help{display:flex;align-items:center;gap:14px;margin-top:36px;padding:18px;border-radius:var(--r-lg);background:var(--surface)}
+.fq-help b{display:block;font-size:16px}
+.fq-help small{color:var(--ink-2);font-size:13px}
+.sec > .fq-help{margin-top:0}                         /* Home: the section already sets the spacing */
+.fq-help .btn{margin-left:auto;min-height:44px;padding:0 18px;font-size:14px;flex:none}
+
+.reg{overflow-x:clip}                                     /* the step slide-in must never add a sideways scrollbar */
+.reg .wrap{max-width:600px;margin:0 auto}
+.reg-head{justify-content:center}
+
+/* ============================ footer ============================ */
+
+/* site footer — structure from the reference: 4 columns, big tagline, links bar */
+.phone .s-main:has(.ft){padding-bottom:0}
+.ft{position:relative;overflow:hidden;margin-top:36px;padding:40px 18px 28px;background:linear-gradient(180deg,var(--surface) 0%,#0b0716 100%);border-top:1px solid var(--line);color:var(--ink-3);font-size:14px}
+.phone .ft{padding-bottom:118px}                     /* clears the floating bottom bar */
+.ft::before{content:"";position:absolute;right:-140px;bottom:60px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(155,60,255,.32),rgba(0,224,255,.08) 55%,transparent 70%);pointer-events:none}
+.ft-in{position:relative;display:grid;gap:36px}
+/* phone: one column, in reading order. Ask first, then Contact, then Pages (2 columns) */
+.ft-top{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"ask" "contact" "pages";gap:32px 20px}
+.ft-pages .ft-list{grid-template-columns:1fr 1fr;column-gap:20px}
+/* Contact us: icon badge + small label over a larger bold value */
+.ft-ci{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.ft-ci a{display:flex;align-items:center;gap:14px;min-height:48px;color:var(--ink);text-decoration:none}
+.ci-ic{display:grid;place-items:center;width:46px;height:46px;flex:none;border-radius:50%;background:rgba(255,255,255,.08);transition:background .2s}
+.ci-ic .ic{width:20px;height:20px}
+.ft-ci a:hover .ci-ic{background:rgba(255,255,255,.16)}
+.ci-tx{display:grid;gap:1px;min-width:0}
+.ci-tx small{font-size:13px;color:var(--ink-2)}
+.ci-tx b{font-size:18px;line-height:1.25;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.ci-link b{color:var(--cyan)}
+.ci-tx .ph{color:inherit;opacity:.75}
+.ft-ask{grid-area:ask}.ft-contact{grid-area:contact}.ft-pages{grid-area:pages}
+/* Registration footer: same look, Contact us only, no space reserved for a bottom bar (there is none) */
+.phone .ft.ft-reg{padding-bottom:40px}
+.ft.ft-reg .ft-top{grid-template-columns:minmax(0,1fr);grid-template-areas:"contact"}
+.ft-h{display:block;margin:0 0 12px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+/* the footer's one primary action: same pill shape as the reference field, now a button */
+.ft-pill{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:58px;padding:5px 6px 5px 22px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:rgba(255,255,255,.03);color:var(--ink);font-size:16px;font-weight:700;letter-spacing:-.01em;cursor:pointer;text-align:left;transition:transform .1s ease-out,background .2s,border-color .2s}
+.ft-pill:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.45)}
+.ft-pill:active{transform:scale(.97)}
+.ft-pill i{display:grid;place-items:center;width:46px;height:46px;flex:none;border-radius:50%;background:var(--ink);color:var(--bg);transition:transform .25s var(--ease-out)}
+.ft-pill:hover i{transform:translateX(2px)}
+.ft-pill i .ic{width:18px;height:18px}
+.ft-help{margin:10px 0 0 22px;font-size:12.5px}
+.ft-list{list-style:none;margin:0;padding:0;display:grid}
+.ft-list a,.ft-list button{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0;border:0;background:none;color:var(--ink-2);font-size:14px;text-decoration:none;cursor:pointer;font-variant-numeric:tabular-nums;transition:color .15s}
+.ft-list a:hover,.ft-list button:hover{color:var(--ink)}
+.ft-list button[aria-current="page"]{color:var(--ink);font-weight:700}
+.ft-list button[aria-current="page"]::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--lime)}
+.ft-tag{margin:0;font-size:32px;line-height:1.1;letter-spacing:-.03em;font-weight:300;color:var(--ink)}
+.ft-tag b{display:block;font-weight:900;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ft-bot{display:flex;flex-direction:column;gap:12px;padding-top:18px;border-top:1px solid var(--line)}
+.ft-by{margin:0;font-size:13px;color:var(--ink-2)}
+.ft-copy{margin:0;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.desktop .ft{padding:64px 40px 28px}
+.desktop .ft-in{max-width:1120px;margin:0 auto;gap:56px}
+.desktop .ft-tag{font-size:52px}
+/* the footer follows its own width, so the desktop frame works at any preview size */
+.ft{container-type:inline-size}
+@container (min-width:560px){
+  .ft-top{grid-template-columns:1fr 1fr;grid-template-areas:"ask pages" "contact pages";gap:40px;align-items:start}
+  .ft-ask{max-width:360px;width:100%}
+}
+@container (min-width:1000px){
+  .ft-top{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) minmax(0,1fr);grid-template-areas:"ask contact pages";gap:56px}
+  .ft-ask{max-width:none}
+  .ft-bot{flex-direction:row;align-items:center;justify-content:space-between;gap:24px}
+  .ft-copy{white-space:nowrap}
+}
+
+/* ============================ registration: 2 steps + confirmation ============================ */
+.addr{margin:6px 0 0;font-size:12px;color:var(--t-muted)}
+.addr code{padding:2px 6px;border-radius:6px;background:#ececef;color:var(--t-ink);font:12px ui-monospace,Menlo,Consolas,monospace}
+/* hero (previous version): pill, event name, dates + venue line; smaller on step 2 */
+.reg-hero{position:relative;height:380px;margin-top:-60px;display:flex;align-items:flex-end}
+.reg-hero .content{position:relative;z-index:3;padding:0 18px 24px;width:100%}
+.reg-hero h2{font-size:42px}
+.desktop .reg-hero{height:440px;margin-top:-72px}
+.desktop .reg-hero .content{max-width:600px;margin:0 auto;padding:0 40px 40px}
+.desktop .reg-hero h2{font-size:56px}
+/* step 2 hero: height follows its content, with room for the sticky header on top (60 phone / 72 desktop) */
+.reg-hero.compact{height:auto;min-height:230px;padding-top:80px}
+.reg-hero.compact h2{font-size:30px}
+.desktop .reg-hero.compact{min-height:300px;padding-top:96px}
+.desktop .reg-hero.compact h2{font-size:40px}
+.reg-hero.compact + .wrap .steps{margin-top:22px}
+/* confirmation stub labels */
+.tk-stub small{display:block;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.tk-stub b{display:block;margin-top:2px;font-size:14px;line-height:1.3;font-weight:700;color:var(--ink)}
+.tk-stub .ph{color:inherit}
+/* step indicator (previous version): two bars that fill + "Step 1 of 2" */
+.steps{margin:0 0 20px}
+.steps-bars{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.steps-bars i{display:block;height:4px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden;position:relative}
+.steps-bars i::after{content:"";position:absolute;inset:0;border-radius:2px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease-out)}
+.steps-bars i.on::after{transform:scaleX(1)}
+.steps-t{margin:10px 0 0;font-size:13.5px;color:var(--ink-2)}
+.steps-t b{color:var(--ink);font-weight:700}
+/* step 1: role "passes" — 4 cards in a 2x2 grid on the brand light art; the chosen one lifts, the others step back */
+.passes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field .pass{position:relative;display:flex;flex-direction:column;justify-content:flex-end;aspect-ratio:1/1;margin:0;padding:14px;border-radius:22px;border:1px solid rgba(255,255,255,.14);cursor:pointer;font-size:16px;color:var(--ink);
+  container-type:inline-size;transition:transform .3s var(--ease-out),opacity .3s,filter .3s,box-shadow .3s}
+.desktop .field .pass{aspect-ratio:16/10;padding:20px}
+.pass input{position:absolute;inset:0;z-index:5;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.pass .pass-veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(8,5,15,0) 30%,rgba(8,5,15,.85))}
+.pass-slot{position:absolute;top:12px;left:50%;z-index:2;width:38px;height:7px;margin-left:-19px;border-radius:4px;background:rgba(8,5,15,.75);box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
+.pass-ck{position:absolute;top:12px;right:12px;z-index:3;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--lime);color:#0c0818;opacity:0;transform:scale(.5);transition:opacity .2s,transform .35s var(--ease-out)}
+.pass-ck .ic{width:17px;height:17px}
+.pass-tx{position:relative;z-index:3;display:grid}
+/* the abbreviation scales with the card, one size for all four so they read as a set ("Marcom" is the widest) */
+.pass-tx b{font-size:clamp(28px,28cqi,52px);line-height:1;font-weight:900;letter-spacing:-.04em;margin:0 0 4px}
+.pass-tx span{font-size:14px;line-height:1.3;font-weight:700;color:var(--ink-2)}
+.pass:active{transform:scale(.97)}
+.pass:has(input:checked){transform:translateY(-3px);box-shadow:0 0 0 2px var(--lime),0 22px 44px -18px rgba(200,255,61,.45)}
+.pass:has(input:checked) .pass-ck{opacity:1;transform:none}
+.passes:has(input:checked) .pass:not(:has(input:checked)){opacity:.5;filter:saturate(.5)}
+.pass:has(input:focus-visible){outline:2px solid var(--cyan);outline-offset:3px}
+/* step 2: "registering as" row, grouped form rows, segmented yes/no */
+.as{display:flex;align-items:center;gap:12px;padding:10px 10px 10px 10px;border-radius:16px;background:var(--surface);border:1px solid rgba(255,255,255,.08)}
+.as-art{width:40px;height:40px;flex:none;border-radius:10px}
+.as-art::before{filter:blur(6px)}
+.as-tx{display:grid;min-width:0}
+.as-tx small{font-size:12px;color:var(--ink-3)}
+.as-tx b{font-size:15px;font-weight:700;color:var(--ink)}
+.as-chg{margin-left:auto;min-height:44px;padding:0 14px;border:0;border-radius:999px;background:rgba(255,255,255,.08);color:var(--ink);font-size:14px;font-weight:700;cursor:pointer;transition:background .2s,transform .1s ease-out}
+.as-chg:hover{background:rgba(255,255,255,.14)}
+.as-chg:active{transform:scale(.96)}
+.form .grp{margin:0;font-size:inherit;font-weight:inherit;color:inherit;border-radius:18px;background:var(--surface);border:1px solid rgba(255,255,255,.08);overflow:hidden}   /* .grp is also the Speakers heading style, so reset it here */
+.row-f{position:relative;padding:12px 16px;border-top:1px solid var(--line);transition:background .2s}
+.row-f:first-child{border-top:0}
+.row-f::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 2px 2px 0;background:var(--cyan);opacity:0;transition:opacity .2s}
+.row-f:focus-within{background:rgba(255,255,255,.03)}
+.row-f:focus-within::before{opacity:1}
+.row-f.bad::before{opacity:1;background:#ff9db8}
+.row-f > label,.rf-l{display:block;margin:0;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.row-f input{display:block;width:100%;min-height:38px;margin-top:2px;padding:0;border:0;background:none;color:var(--ink);font-size:17px;outline:none}
+.row-f input::placeholder{color:rgba(149,141,176,.6)}
+.row-btn{display:grid;grid-template-columns:1fr auto;align-items:center;width:100%;padding:0;border:0;background:none;color:var(--ink);text-align:left;cursor:pointer}
+.row-btn .rf-l{grid-column:1/-1}
+.rf-v{min-height:38px;display:flex;align-items:center;margin-top:2px;font-size:17px}
+.rf-v.empty{color:rgba(149,141,176,.75)}
+.row-btn .ic{color:var(--ink-3)}
+.row-f .f-err{margin:2px 0 0}
+.grp-foot{margin:-4px 4px 0;font-size:13px;line-height:1.5;color:var(--ink-3)}
+.row-seg .rf-l{margin-bottom:10px;font-size:14px;letter-spacing:0;text-transform:none;color:var(--ink)}
+.seg2{display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:3px;border-radius:12px;background:rgba(255,255,255,.08)}
+.seg2 label{position:relative;display:grid;place-items:center;min-height:44px;margin:0;border-radius:9px;font-size:15px;font-weight:700;color:var(--ink-2);cursor:pointer;transition:background .2s,color .2s}
+.seg2 input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.seg2 label:has(input:checked){background:#fff;color:#0c0818;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.seg2 label:has(input:focus-visible){outline:2px solid var(--cyan);outline-offset:2px}
+/* Table Top is mandatory for DOS: the answer is fixed to Yes and shown locked, with a note */
+.seg2.locked label{cursor:default}
+.seg2.locked label:has(input:checked){background:var(--lime);color:#0c0818}
+.seg2.locked label:has(input:disabled:not(:checked)){opacity:.4}
+.row-seg .rf-l{display:flex;align-items:center;gap:8px}
+.row-seg .rf-l .ic{width:16px;height:16px;flex:none;color:var(--lime)}
+.must{margin:10px 0 0;font-size:13.5px;line-height:1.45;color:var(--ink-2)}
+/* action pinned to the bottom on phone, over a soft fade (scroll-edge, not a hard bar) */
+.rg-bar{position:sticky;bottom:0;z-index:4;margin:6px -18px 0;padding:18px 18px 16px;background:linear-gradient(180deg,rgba(8,5,15,0),rgba(8,5,15,.9) 38%)}
+.phone .s-main:has(.reg){padding-bottom:0}                /* no bottom nav on Registration, so the pinned bar can sit at the real bottom */
+.desktop .rg-bar,[data-form="reg-role"] .rg-bar{position:static;margin:6px 0 0;padding:0;background:none}   /* step 1 is short: button sits right under the cards */
+/* confirmation pass: header art, name, role, details, tear line, date/venue stub */
+.tk{grid-area:card;overflow:hidden;border-radius:24px;background:var(--surface);border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 60px -30px rgba(155,60,255,.45);animation:tkIn .6s .15s var(--ease-out) both}
+@keyframes tkIn{from{opacity:0;transform:translateY(28px) rotate(-1.5deg)}}
+.tk-head{position:relative;min-height:128px;display:flex;align-items:flex-end}
+.tk-head .shade{background:linear-gradient(180deg,rgba(8,5,15,.05),rgba(8,5,15,.8))}
+.tk-ev{position:relative;z-index:3;padding:18px 20px}
+.tk-ev span{display:block;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--lime)}
+.tk-ev b{display:block;margin-top:4px;font-size:19px;line-height:1.2;font-weight:900;letter-spacing:-.015em}
+.tk-body{padding:18px 20px 16px}
+.tk-name{margin:0;font-size:28px;line-height:1.1;font-weight:900;letter-spacing:-.02em;overflow-wrap:anywhere}
+.tk-role{display:inline-flex;align-items:center;gap:8px;margin:10px 0 0;padding:5px 12px;border-radius:999px;background:#2a1d4a;box-shadow:inset 0 0 0 1px rgba(178,60,255,.6);font-size:13.5px;color:var(--ink-2)}
+.tk-role b{color:var(--ink);font-weight:900}
+.tk-rows{margin:14px 0 0}
+.tk-rows > div{padding:10px 0;border-top:1px solid var(--line)}
+.tk-rows dt{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.tk-rows dd{margin:2px 0 0;font-size:16px;font-weight:700;color:var(--ink);overflow-wrap:anywhere}
+.tk-tear{position:relative;height:0;margin:0 22px;border-top:2px dashed rgba(255,255,255,.16)}
+.tk-tear::before,.tk-tear::after{content:"";position:absolute;top:-13px;width:24px;height:24px;border-radius:50%;background:var(--bg)}
+.tk-tear::before{left:-35px}.tk-tear::after{right:-35px}
+.tk-stub{display:grid;grid-template-columns:auto 1fr;gap:0;padding:14px 6px 16px}
+.tk-stub > div{padding:0 14px;min-width:0}
+.tk-stub > div + div{border-left:1.5px dashed rgba(255,255,255,.18)}
+/* step panel: slides in from the side the user is heading to (forward = from the right) */
+.rg-panel.fwd{animation:stepFwd .36s var(--ease-out)}
+.rg-panel.back{animation:stepBack .36s var(--ease-out)}
+@keyframes stepFwd{from{opacity:0;transform:translateX(28px)}}
+@keyframes stepBack{from{opacity:0;transform:translateX(-28px)}}
+.rg-h{margin:0;font-size:26px;line-height:1.15;font-weight:900;letter-spacing:-.02em}
+.rg-h:focus{outline:none}
+.rg-tap{margin:2px 0 0;text-align:center;font-size:14px;color:var(--ink-3)}
+.rg-sub{margin:8px 0 0;color:var(--ink-2);font-size:15.5px;line-height:1.5}
+.rg-next[aria-disabled="true"]{background:rgba(255,255,255,.14);color:rgba(246,243,255,.55)}
+/* confirmation (screenshot-friendly) */
+.reg .wrap.wide{max-width:600px}
+.desktop .reg .wrap.wide{max-width:960px}
+.rc{padding-top:20px}
+.rc-grid{display:grid;gap:22px;grid-template-areas:"top" "card" "after"}
+.desktop .rc-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);column-gap:48px;row-gap:0;grid-template-areas:"top card" "after card";align-items:start;padding-top:16px}
+.rc-top{grid-area:top}.rc-after{grid-area:after}
+.ok-wrap{display:grid;place-items:center;width:92px;height:92px;margin:0 0 14px -6px;border-radius:50%;background:radial-gradient(circle,rgba(200,255,61,.16),transparent 70%)}
+.ok{width:72px;height:72px}
+.ok circle{fill:none;stroke:var(--lime);stroke-width:3;stroke-dasharray:176;stroke-dashoffset:176;transform:rotate(-90deg);transform-origin:32px 32px;animation:draw .65s .05s var(--ease-out) forwards}
+.ok path{fill:none;stroke:var(--lime);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .4s .5s var(--ease-out) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.rc-title{margin:0;font-size:38px;line-height:1.05;font-weight:900;letter-spacing:-.03em}
+.rc-title:focus{outline:none}
+.desktop .rc-title{font-size:48px}
+.rc-lead{margin:12px 0 0;font-size:17px;line-height:1.5;color:var(--ink-2)}
+.rc-shot{display:flex;align-items:center;gap:10px;margin:0;padding:6px 2px;font-size:15px;font-weight:700;color:var(--ink)}
+.rc-shot .ic{flex:none;color:var(--cyan)}
+.desktop .rc-after{padding-top:22px}
+.desktop .rc-shot{padding-top:0}
+.rc-change{margin-top:10px;padding:18px;border-radius:var(--r-lg);background:var(--surface)}
+.rc-change b{display:block;font-size:17px}
+.rc-change p{margin:2px 0 14px;color:var(--ink-2);font-size:15px}
+/* role cards, yes/no, hotel field, errors, hotel picker */
+.f-err{margin:6px 0 0;font-size:13.5px;line-height:1.45;color:#ff9db8}
+.rg-wa{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:var(--cyan);font-weight:700;text-decoration:none}
+.f-err .rg-wa{display:flex}
+/* hotel picker: phone = full-screen sheet, desktop = centered dialog (shares the "Ask us anything" material) */
+.ask.pk{display:flex;flex-direction:column;overflow:hidden;padding:18px 20px 0}
+.phone .ask.pk{left:0;right:0;top:0;bottom:0;max-height:none;border-radius:0;border:0;padding:22px 20px 0;background:rgba(12,8,22,.98)}
+.desktop .ask.pk{height:min(600px,calc(100% - 48px));padding:22px 28px 0}
+.pk-search{position:relative;margin:8px 0 4px}
+.pk-search .ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ink-3);pointer-events:none}
+.pk-search input{width:100%;min-height:52px;padding:0 16px 0 44px;border-radius:var(--r-sm);border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:var(--ink);font-size:16px;transition:border-color .2s}
+.pk-search input:focus{outline:none;border-color:var(--cyan)}
+.pk-res{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;margin:0 -20px;padding:0 20px 24px}
+.desktop .pk-res{margin:0 -28px;padding:0 28px 24px}
+.pk-count{margin:12px 0 2px;font-size:13px;color:var(--ink-3)}
+.pk-list{list-style:none;margin:0;padding:0}
+.pk-item{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:52px;padding:10px 4px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font-size:16px;text-align:left;cursor:pointer;transition:background .15s}
+.pk-item:hover{background:rgba(255,255,255,.04)}
+.pk-item:active{background:rgba(255,255,255,.08)}
+.pk-item[aria-pressed="true"]{color:var(--lime);font-weight:700}
+.pk-empty{padding:32px 0 12px;text-align:center}
+.pk-empty b{display:block;font-size:18px}
+.pk-empty p{margin:8px 0 18px;color:var(--ink-2)}
+/* venue: second block */
+.vd-eye{display:block;margin-bottom:6px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan)}
+.vd + .vd{margin-top:24px}
+.vs{padding:20px;border-radius:var(--r-lg);background:var(--surface)}
+.vs .vd-name{margin:0;font-size:24px;line-height:1.1;font-weight:900;letter-spacing:-.02em}
+.vs .vd-addr{margin:10px 0 16px}
+
+/* "Ask us anything" — phone: bottom sheet that rises from the footer button's side of the screen.
+   Desktop: centered dialog. Same material as the More sheet; dims the page because it is a modal task. */
+.ask-scrim{z-index:40;background:rgba(4,2,10,.55)}
+.ask{position:absolute;z-index:41;left:8px;right:8px;bottom:8px;max-height:calc(100% - 56px);overflow-y:auto;overscroll-behavior:contain;
+  padding:8px 20px 22px;border-radius:30px;background:rgba(28,19,46,.94);backdrop-filter:blur(30px) saturate(150%);-webkit-backdrop-filter:blur(30px) saturate(150%);
+  border:1px solid rgba(255,255,255,.12);box-shadow:0 -12px 50px rgba(0,0,0,.5);color:var(--ink);font-family:var(--font);
+  transform-origin:50% 100%;animation:askUp .38s var(--ease-out)}
+.ask:focus{outline:none}
+.ask .grab{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin:4px auto 6px}
+.ask-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 4px}
+.ask-head h3{margin:0;font-size:24px;line-height:1.15;letter-spacing:-.02em;font-weight:900}
+.ask-x{display:grid;place-items:center;width:44px;height:44px;flex:none;margin-right:-8px;border:0;border-radius:50%;background:rgba(255,255,255,.08);color:var(--ink);cursor:pointer;transition:background .2s,transform .1s ease-out}
+.ask-x:hover{background:rgba(255,255,255,.14)}
+.ask-x:active{transform:scale(.94)}
+.ask-sub{margin:0 0 18px;color:var(--ink-2);font-size:14px;line-height:1.5}
+.ask .form{gap:14px}
+/* fields sit on the sheet material, so they need their own lighter fill and an edge to read as inputs */
+.ask .field input,.ask .field textarea{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+.ask .field input:focus,.ask .field textarea:focus{background:rgba(255,255,255,.1);border-color:var(--cyan)}
+.ask .field textarea{min-height:104px}
+.ask-alt{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500}
+.ask-alt:hover{color:var(--ink)}
+.ask-done{display:grid;justify-items:center;text-align:center;padding:16px 0 4px;animation:fade .3s ease-out}
+.ask-done .tick{display:grid;place-items:center;width:60px;height:60px;margin-bottom:14px;border-radius:50%;background:var(--lime);color:#0c0818}
+.ask-done .tick .ic{width:26px;height:26px}
+.ask-done b{font-size:20px;letter-spacing:-.01em}
+.ask-done p{margin:6px 0 20px;color:var(--ink-2)}
+.desktop .ask{left:0;right:0;top:0;bottom:0;margin:auto;width:min(460px,calc(100% - 48px));height:fit-content;max-height:calc(100% - 48px);padding:22px 28px 26px;border-radius:24px;
+  transform-origin:50% 60%;animation:askPop .32s var(--ease-out);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.ask.still,.ask-scrim.still{animation:none}
+.ask.closing{animation:askDown .2s ease-in forwards}
+.desktop .ask.closing{animation:askPopOut .18s ease-in forwards}
+.ask-scrim.closing{animation:fadeOut .2s ease-in forwards}
+@keyframes askUp{from{transform:translateY(100%)}to{transform:none}}
+@keyframes askDown{to{transform:translateY(100%)}}
+@keyframes askPop{from{transform:translateY(12px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+@keyframes askPopOut{to{transform:translateY(8px) scale(.97);opacity:0}}
+
+.toast{position:absolute;left:50%;top:calc(var(--head-h,60px) + 12px);z-index:30;transform:translateX(-50%);width:max-content;max-width:86%;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.92);color:#111;font:600 13px/1.35 system-ui,sans-serif;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35);animation:toastIn .35s var(--ease-out)}
+@keyframes toastIn{from{transform:translate(-50%,-12px);opacity:0}}
+
+/* ============================ responsive tool ============================ */
+@media (max-width:900px){
+  .app{grid-template-columns:1fr;grid-template-rows:auto 1fr;height:auto;min-height:100dvh;overflow:visible}
+  .side{border-right:0;border-bottom:1px solid var(--t-line);max-height:none}
+  .stage{min-height:80dvh}
+}
+@media (max-width:520px){
+  /* real phone: the site fills the screen, the settings sidebar becomes a full-screen panel behind the gear button */
+  .app{display:block;height:100dvh;min-height:0;overflow:hidden}
+  .stage{min-height:100dvh}
+  .side{position:fixed;inset:0;z-index:300;border:0;max-height:none;padding-top:max(20px,env(safe-area-inset-top,0px));
+    transform:translateY(100%);visibility:hidden;transition:transform .3s var(--ease-out),visibility 0s .3s}
+  body.tools-open .side{transform:none;visibility:visible;transition:transform .3s var(--ease-out)}
+  .side-close{display:block;position:sticky;top:0;margin:-4px 0 12px auto;min-height:44px;padding:0 20px;border:0;border-radius:999px;background:var(--t-sel);color:#fff;font:inherit;font-weight:600;font-size:15px;cursor:pointer;z-index:2}
+  .tools-fab{display:grid}
+  body.sheet-open .tools-fab,body.tools-open .tools-fab{display:none}
+  .device.island{--head-h:60px}
+  .island .s-head{padding-top:0}
+  .stage{padding:0}
+  .stage:not(.is-desktop) .fit{width:100%!important;height:calc(100dvh - 0px)!important}
+  .device.island::after{display:none}
+  .stage:not(.is-desktop) .device.phone{position:relative;width:100%!important;height:100%!important;border:0;border-radius:0;transform:none!important}
+}
+
+/* ============================ image-asset marker (review tool) ============================ */
+/* "Mark image assets" (sidebar > Review): swaps every image slot for the flat magenta supplied by the team (#ff43fc).
+   Overlays, text and layout stay as they are, so you see exactly where image assets go. Off by default. */
+.mark-imgs .photo,.mark-imgs .art{background:#ff43fc!important}
+.mark-imgs .photo img{visibility:hidden}
+.mark-imgs .photo::after,.mark-imgs .photo::before,.mark-imgs .art::before,.mark-imgs .art::after{display:none!important}
+.mark-imgs img.logo{aspect-ratio:2/1;content:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='1'%3E%3Crect width='2' height='1' fill='%23ff43fc'/%3E%3C/svg%3E")}
+
+/* ============================ accessibility prefs ============================ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+@media (prefers-reduced-transparency:reduce){
+  .s-head,.s-bottom,.sheet,.ask,.daytabs,.btn-glass{backdrop-filter:none;-webkit-backdrop-filter:none;background:#170f29}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <button class="tools-fab" id="toolsFab" type="button" aria-label="Preview settings" aria-expanded="false">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 14.5a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3h0a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5h0a1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8v0a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
+  </button>
+  <aside class="side" aria-label="Preview controls">
+    <button class="side-close" id="toolsClose" type="button">Done</button>
+    <h1>Event Directory</h1>
+    <p class="sub">Wireframes · Archipelago Leadership Summit 2027</p>
+
+    <h2>Pages</h2>
+    <div id="pageList"></div>
+    <p class="hint">Switch off a page to hide it. Navigation and the footer update, and its address redirects to Home.</p>
+    <p class="addr">Address <code id="addr"></code></p>
+
+    <h2>Device</h2>
+    <div class="seg" role="group" aria-label="Device">
+      <button data-view="phone">Phone</button>
+      <button data-view="desktop">Desktop</button>
+    </div>
+    <label class="lbl" for="sizeSel">Size</label>
+    <select id="sizeSel"></select>
+    <p class="hint" id="sizeHint"></p>
+
+    <h2>Event timing</h2>
+    <label class="sr" for="todaySel">Today is</label>
+    <select id="todaySel">
+      <option value="0">Before the event</option>
+      <option value="1">Day 1 is today</option>
+      <option value="2">Day 2 is today</option>
+      <option value="3">Day 3 is today</option>
+      <option value="4">Day 4 is today</option>
+      <option value="5">After the event</option>
+    </select>
+
+    <h2>Admin panel</h2>
+    <div class="row"><span>Content ready</span><span class="sw"><input type="checkbox" id="readyChk" checked aria-label="Content ready"></span></div>
+    <div class="row"><span>Registration open</span><span class="sw"><input type="checkbox" id="regOpenChk" checked aria-label="Registration open"></span></div>
+    <div class="row"><span>Useful links (FAQ page)</span><span class="sw"><input type="checkbox" id="relChk" checked aria-label="Useful links on the FAQ page"></span></div>
+    <div id="galList"></div>
+
+    <h2>Review</h2>
+    <div class="row"><span>Show brief notes</span><span class="sw"><input type="checkbox" id="notesChk" aria-label="Show brief notes"></span></div>
+    <div class="row"><span>Mark image assets</span><span class="sw"><input type="checkbox" id="imgChk" aria-label="Mark image assets in magenta"></span></div>
+    <p class="hint">Fills every photo, brand light-art and the logo with flat magenta, so you can see which items are image assets. Nothing else changes.</p>
+  </aside>
+
+  <main class="stage" id="stage">
+    <div class="fit" id="fit"><div class="device phone" id="device"></div></div>
+    <p class="cap" id="cap">Photos are stand-ins with a brand duotone. Grey text in [brackets] is placeholder copy.</p>
+  </main>
+</div>
+
+<script>
+/* ======================= placeholder data ======================= */
+const EVENT = {
+  name:"Archipelago Leadership Summit 2027", tagline:"Legacy in Motion, Future in Focus", dates:"1 – 4 February 2027", venue:"Aston Serang Hotel & Convention Center",
+  address:"[Street address], [City] [Postcode]", organizer:"[Organizer name]",
+  email:"[organizer@email]", wa:"[+00 000 0000 0000]", office:"[Office address], [City]",
+};
+/* Second venue: where Table Top takes place (brief: Venue page has one block per hotel) */
+EVENT.venue2 = "Aston Kartika Grogol"; EVENT.address2 = "[Street address], [City] [Postcode]";
+/* Dummy hotel list (100+), only to show the type-to-search picker. The real list comes from the content owner. */
+const HOTELS = [EVENT.venue, EVENT.venue2,
+  ...["Jakarta","Bandung","Surabaya","Bali","Yogyakarta","Medan","Semarang","Makassar","Balikpapan","Palembang","Batam","Malang","Manado"]
+    .flatMap(c => ["Harbour View","City Centre","Garden Palace","Lakeside","Royal Plaza","Sunrise","Skyline","Heritage"].map(t => `${t} ${c}`))
+].sort((a, b) => a.localeCompare(b));
+const DAYS = [
+  { n:1, date:"1 Feb", wk:"Mon", wd:"Monday",    event:"Conference Day", art:"ring",   pics:["conf1","conf2","conf3"] },
+  { n:2, date:"2 Feb", wk:"Tue", wd:"Tuesday",   event:"Breakout Day",   art:"ribbon", pics:["break1","break2","break3"] },
+  { n:3, date:"3 Feb", wk:"Wed", wd:"Wednesday", event:"Awards Night",   art:"gold",   pics:["award1","award2","award3"] },
+  { n:4, date:"4 Feb", wk:"Thu", wd:"Thursday",  event:"Closing Day",    art:"orb",    pics:["close1","close2","close3"] },
+];
+const face = n => `https://i.pravatar.cc/480?img=${n}`;
+const pic  = (seed, w = 900, h = 700) => `https://picsum.photos/seed/cs26-${seed}/${w}/${h}`;
+const SPEAKERS = [
+  { id:"k1", tier:"Keynote", name:"Pak JF",            title:"[Job title]", company:"[Company]", img:face(12) },
+  { id:"k2", tier:"Keynote", name:"Pak CL",            title:"[Job title]", company:"[Company]", img:face(13) },
+  { id:"h1", tier:"Host",    name:"Host A",            title:"[Job title]", company:"[Company]", img:face(32) },
+  { id:"k3", tier:"Keynote", name:"James Gwee",        title:"[Job title]", company:"[Company]", img:face(15), main:true },   // main:true = the one card on Home
+  { id:"g2", tier:"Guest",   name:"Guest Speaker B",   title:"[Job title]", company:"[Company]", img:face(45) },
+  { id:"g3", tier:"Guest",   name:"Guest Speaker C",   title:"[Job title]", company:"[Company]", img:face(59) },
+];
+/* Agenda, from the "schedule Leadership summit 2027" sheet (Schedule tab). Speaker sessions keep the brief's dummy titles
+   (the sheet has Opening A / Topic B / Topic Z). Badges and notes come from the brief. Rooms are left out until provided.
+   end:null = open-ended ("– Finish"); tbc = "Time to be confirmed"; items = several sessions sharing one time (one block);
+   from/to = a transfer row, which shows the journey instead of a hotel; dress = the dress code the session is grouped under. */
+const HOTEL = { serang:"Aston Serang", grogol:"Aston Kartika Grogol", anyer:"Aston Anyer" };
+const SESSIONS = [
+  { id:"s11", day:1, start:"09:00", end:"12:00", title:"Imagination Table Top", hotel:"grogol", role:"For DOS", note:"Joining is optional for GM, PR and Marcom", dress:"Fun attire" },
+  { id:"s12", day:1, start:"18:30", end:null, title:"Welcome Dinner", hotel:"serang", dress:"Tech fun" },
+  { id:"s21", day:2, start:"09:55", end:"10:00", title:"Milestone Video Part 1", hotel:"serang", note:"Continues on Wed 3 Feb at 09:00 (Milestone Video Part 2)", dress:"Formal attire" },
+  { id:"s22", day:2, start:"10:00", end:"11:00", title:"Opening Keynote", hotel:"serang", spk:["k1"], dress:"Formal attire" },
+  { id:"s23", day:2, start:"11:00", end:"12:00", title:"Leadership Session", hotel:"serang", spk:["k2"], dress:"Formal attire" },
+  { id:"s24", day:2, start:"14:00", end:"16:00", title:"Guest Speaker Session", hotel:"serang", spk:["k3"], dress:"Formal attire" },
+  { id:"s25", day:2, start:"16:30", end:null, dress:"Formal attire", items:[
+      { id:"s25a", title:"Special Dinner & Awarding GM", hotel:"serang" },
+      { id:"s25b", title:"Got Talent – Semifinals", hotel:"serang" } ] },
+  { id:"s31", day:3, start:"09:00", end:"09:30", title:"Milestone Video Part 2", hotel:"serang", dress:"Formal attire" },
+  { id:"s32", day:3, start:"09:30", end:"12:00", title:"RGM, SCD, RCD, PR & Communications Sharing Session", hotel:"serang", dress:"Formal attire" },
+  { id:"s33", day:3, start:"13:00", end:"15:00", title:"Departure to Aston Anyer", from:"serang", to:"anyer", dress:"Sport attire" },
+  { id:"s34", day:3, start:"15:00", end:"17:00", title:"Fun Games", hotel:"anyer", dress:"Sport attire" },
+  { id:"s35", day:3, start:"18:30", end:"20:00", title:"Closing Dinner", hotel:"anyer", dress:"Sport attire" },
+  { id:"s36", day:3, start:"20:00", end:null, title:"Departure Back to Aston Serang and Free Time", from:"anyer", to:"serang", dress:"Sport attire" },
+  { id:"s41", day:4, tbc:true, title:"Check Out", hotel:"serang", dress:"Free attire" },
+  { id:"s42", day:4, tbc:true, title:"GM Sports Morning Activity", hotel:"serang", role:"For GM", note:"Details to be confirmed", dress:"Free attire" },
+  { id:"s43", day:4, tbc:true, title:"Sales Workshop Gathering", hotel:"serang", role:"For DOS", dress:"Free attire" },
+  { id:"s44", day:4, tbc:true, title:"Archipelago PR Workshop & Media Gathering", hotel:"serang", role:"For PR and Marcom", dress:"Free attire" },
+];
+/* Session display helpers, shared by Agenda, Home and Speakers */
+const sessTime  = s => s.tbc ? "Time to be confirmed" : `${s.start} – ${s.end || "Finish"}`;
+const sessStart = s => s.tbc ? "Time to be confirmed" : s.start;
+const sessTitle = s => s.items ? s.items.map(i => i.title).join(" · ") : s.title;
+const HIGHLIGHTS = [
+  { label:"[Highlight 1]", img:pic("hl1",800,450) },
+  { label:"[Highlight 2]", img:pic("hl2",800,450) },
+  { label:"[Highlight 3]", img:pic("hl3",800,450) },
+];
+const RELATED = [
+  { label:"[Organizer website]", sub:"Organizer page", art:"orb" },
+  { label:"[Partner website]", sub:"Relevant website", art:"ring" },
+  { label:"[Event guide]", sub:"Supporting resource", art:"ribbon" },
+];
+/* FAQ: dummy copy until the content owner provides the question list (open item).
+   Groups match the contact form topics; most-asked first. `link` points at a Useful links item. */
+const LOREM_Q = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit?", "Sed do eiusmod tempor incididunt ut labore?", "Ut enim ad minim veniam, quis nostrud exercitation?",
+  "Duis aute irure dolor in reprehenderit in voluptate?", "Excepteur sint occaecat cupidatat non proident?", "Nemo enim ipsam voluptatem quia voluptas sit?"];
+const LOREM_A = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus. Donec ullamcorper nulla non metus auctor fringilla, vestibulum id ligula porta felis euismod semper.";
+const FAQ = [
+  { topic:"Program",  items:[{ id:"p1", q:LOREM_Q[0], a:LOREM_A }, { id:"p2", q:LOREM_Q[1], a:LOREM_A }, { id:"p3", q:LOREM_Q[2], a:LOREM_A }] },
+  { topic:"Venue",    items:[{ id:"v1", q:LOREM_Q[3], a:LOREM_A, link:2 }, { id:"v2", q:LOREM_Q[4], a:LOREM_A }] },
+  { topic:"Speakers", items:[{ id:"k1", q:LOREM_Q[5], a:LOREM_A }, { id:"k2", q:LOREM_Q[0], a:LOREM_A }] },
+  { topic:"Other",    items:[{ id:"o1", q:LOREM_Q[1], a:LOREM_A, link:0 }, { id:"o2", q:LOREM_Q[2], a:LOREM_A }, { id:"o3", q:LOREM_Q[3], a:LOREM_A }] },
+];
+const PAGES = [
+  { k:"home", l:"Home", sub:"Always on" },
+  { k:"agenda", l:"Agenda", sub:"Program by day" },
+  { k:"speakers", l:"Speakers", sub:"Who is on stage" },
+  { k:"venue", l:"Venue", sub:"Location and map" },
+  { k:"gallery", l:"Gallery", sub:"Drive photo albums" },
+  { k:"contact", l:"Contact", sub:"Form and WhatsApp" },
+  { k:"faq", l:"FAQ", sub:"Questions and useful links" },
+];
+const REG = { k:"registration", l:"Registration", sub:"Own slug · shared at H-30" };
+
+/* stroke icons, one family (1.8px, round) */
+const IC = {
+  home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5.5v-6h-5v6H4a1 1 0 0 1-1-1z"/>',
+  agenda:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+  speakers:'<circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4 4-6 8-6s7.2 2 8 6"/>',
+  venue:'<path d="M12 21.5s-7.5-6.4-7.5-12a7.5 7.5 0 0 1 15 0c0 5.6-7.5 12-7.5 12z"/><circle cx="12" cy="9.5" r="2.6"/>',
+  gallery:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/>',
+  contact:'<path d="M21 12a8.5 8.5 0 0 1-12.4 7.6L3 21l1.5-5.2A8.5 8.5 0 1 1 21 12z"/>',
+  more:'<circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/>',
+  cal:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+  pin:'<path d="M12 21.5s-7.5-6.4-7.5-12a7.5 7.5 0 0 1 15 0c0 5.6-7.5 12-7.5 12z"/><circle cx="12" cy="9.5" r="2.6"/>',
+  arrow:'<path d="M7 17 17 7M8 7h9v9"/>',
+  chev:'<path d="m9 6 6 6-6 6"/>',
+  lock:'<rect x="4.5" y="10.5" width="15" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>',
+  check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  nav:'<path d="M3 11 21 3l-8 18-2-8z"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  right:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  x:'<path d="M6 6l12 12M18 6 6 18"/>',
+  ig:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5v.01"/>',
+  li:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V16.5M8 7.5v.01M12 16.5v-6M12 13.5a2.5 2.5 0 0 1 5 0v3"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/>',
+  back:'<path d="m15 6-6 6 6 6"/>',
+  camera:'<path d="M4 8.5A2.5 2.5 0 0 1 6.5 6H8l1.2-2h5.6L16 6h1.5A2.5 2.5 0 0 1 20 8.5v8a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5z"/><circle cx="12" cy="12.5" r="3.4"/>',
+  faq:'<circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.4c-.6.3-1 .8-1 1.5v.5M12 16.8v.01"/>',
+  hanger:'<path d="M10 5.5a2 2 0 1 1 2 2v1.6M12 9.1 3.6 15.2a1.2 1.2 0 0 0 .7 2.2h15.4a1.2 1.2 0 0 0 .7-2.2L12 9.1"/>',
+  bus:'<rect x="4.5" y="3.5" width="15" height="14" rx="3"/><path d="M4.5 11h15M8 17.5V20M16 17.5V20M8.5 14.3h.01M15.5 14.3h.01"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8v.01"/>',
+};
+const svg = (k, cls = "ic") => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[k]}</svg>`;
+
+/* ======================= state ======================= */
+const S = {
+  page:"registration", view:"phone",
+  size:{ phone:"iphone16", desktop:"desk-m" },           // chosen device per view (Device > Size)
+  on:{ registration:true, agenda:true, speakers:true, venue:true, gallery:true, contact:true, faq:true },
+  today:0, ready:true, regOpen:true, related:true,
+  galleryOn:{ 1:false, 2:false, 3:false, 4:false },
+  regDone:false, contactDone:false, agendaDay:null,
+  agPrev:null,                                           // agPrev: Agenda tab we came from (slides the selection for one render)
+  askOpen:false, askDone:false, askAnim:false, ask:{ name:"", email:"", q:"" },
+  spkOpen:{ k1:true },                                   // first keynote open, as in the reference
+  faqOpen:null,                                          // FAQ accordion: id of the one open answer
+  reg:{ path:null, name:"", hotel:"", email:"", wa:"", blitz:null },   // registration draft, kept if the page re-renders
+  regStep:1, regDir:"",                                  // 2-step registration: 1 = role, 2 = details; regDir = slide direction for one render
+  regErr:{}, regEmails:["registered@example.com"],       // regEmails: already-registered emails (demo of the duplicate block)
+  hotelOpen:false, hotelQ:"",
+  moreOpen:false, focus:null, toast:null,
+};
+
+/* ======================= helpers ======================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ph = s => esc(s).replace(/\[([^\]]+)\]/g, '<span class="ph">[$1]</span>');
+const note = t => `<p class="note">Brief · ${esc(t)}</p>`;
+const spkById = id => SPEAKERS.find(s => s.id === id);
+const visiblePages = () => PAGES.filter(p => p.k === "home" || S.on[p.k]);
+/* Default day (brief): today's tab during the event, Monday before it, Thursday after it. S.today: 0 before, 1–4 during, 5 after. */
+const isEventDay = () => S.today >= 1 && S.today <= 4;
+const defaultDay = () => isEventDay() ? S.today : (S.today > 4 ? 4 : 1);
+const curDay = () => S.agendaDay || defaultDay();
+const photo = (src, alt = "", cls = "") => `<div class="photo ${cls}"><img src="${src}" alt="${esc(alt)}" loading="lazy" decoding="async"></div>`;
+const art = (v, inner = "", cls = "") => `<div class="art art-${v} ${cls}">${inner}</div>`;
+
+function go(page, opts = {}) {
+  S.moreOpen = false; S.askOpen = false;
+  if (page !== "home" && !S.on[page]) {
+    S.toast = `${(PAGES.find(p => p.k === page) || { l: page }).l} is hidden, so its address opens Home`;
+    page = "home";
+  }
+  if (page !== S.page) {
+    if (S.regDone) S.reg = { path:null, name:"", hotel:"", email:"", wa:"", blitz:null };   // a finished registration starts blank next time
+    S.regDone = false; S.contactDone = false; S.regErr = {}; S.hotelOpen = false; S.regStep = 1; S.regDir = "";
+    S.agendaDay = null;                                  // the Agenda reopens on its default day (today / Mon / Thu)
+  }
+  S.page = page;
+  if (opts.day) S.agendaDay = opts.day;
+  S.focus = opts.focus || null;
+  history.replaceState(null, "", "#/" + page);
+  render(true);
+}
+
+/* ======================= site chrome ======================= */
+function headerHTML() {
+  const logo = `<img class="logo" src="assets/logo-color-on-dark.png" alt="${esc(EVENT.name)}" width="133" height="66">`;
+  if (S.page === "registration") return `<header class="s-head reg-head">${logo}</header>`;
+  if (S.view === "phone") return `<header class="s-head">${logo}</header>`;
+  const links = visiblePages().map(p => `<button data-go="${p.k}" ${S.page === p.k ? 'aria-current="page"' : ""}>${p.l}</button>`).join("");
+  return `<header class="s-head">${logo}<nav class="s-links" aria-label="Main">${links}</nav></header>`;
+}
+
+function bottomBarHTML() {
+  const vis = visiblePages();
+  let direct = vis, more = [];
+  if (vis.length > 5) {               // four main tabs + More (Gallery, Contact, FAQ)
+    direct = vis.filter(p => ["home","agenda","speakers","venue"].includes(p.k));
+    more = vis.filter(p => ["gallery","contact","faq"].includes(p.k));
+  }
+  const moreActive = more.some(p => p.k === S.page);
+  let h = direct.map(p => `<button data-go="${p.k}" ${S.page === p.k ? 'aria-current="page"' : ""}>${svg(p.k, "")}${p.l}</button>`).join("");
+  if (more.length) h += `<button data-more aria-haspopup="dialog" aria-expanded="${S.moreOpen}" ${moreActive ? 'aria-current="page"' : ""}>${svg("more", "")}More</button>`;
+  let sheet = "";
+  if (S.moreOpen) {
+    const thumbs = { gallery: photo(pic("award2", 200, 200)), contact: art("orb"), faq: art("ribbon") };
+    const subs = { gallery:"Event photo albums", contact:"Message the organizer", faq:"Questions and useful links" };
+    sheet = `<div class="scrim" data-close-more></div>
+      <div class="sheet" role="dialog" aria-label="More pages"><div class="grab"></div>
+      ${more.map(p => `<button class="item press" data-go="${p.k}"><span class="thumb">${thumbs[p.k]}</span><span><b>${p.l}</b><small>${subs[p.k]}</small></span>${svg("chev")}</button>`).join("")}</div>`;
+  }
+  return `<nav class="s-bottom" aria-label="Main">${h}</nav>${sheet}`;
+}
+
+/* "Contact us" block (WhatsApp + email with icon badges): shared by the main footer and the Registration footer */
+function contactUsHTML() {
+  const no = 'href="#" onclick="return false"';
+  return `<div class="ft-contact"><h5 class="ft-h">Contact us</h5><ul class="ft-ci">
+        <li><a ${no}><span class="ci-ic">${svg("contact")}</span><span class="ci-tx"><small>WhatsApp</small><b>${ph(EVENT.wa)}</b></span></a></li>
+        <li><a ${no} class="ci-link"><span class="ci-ic">${svg("mail")}</span><span class="ci-tx"><small>Email</small><b>${ph(EVENT.email)}</b></span></a></li></ul></div>`;
+}
+
+/* Tagline + "Organized by" + copyright: shared by the main footer and the Registration footer */
+function footerBaseHTML() {
+  return `<p class="ft-tag">Where hospitality <b>commerce meets what's next.</b></p>
+    <div class="ft-bot">
+      <p class="ft-by">Organized by ${ph(EVENT.organizer)}</p>
+      <p class="ft-copy">© 2027 ${esc(EVENT.name)}. All rights reserved.</p>
+    </div>`;
+}
+
+/* Registration footer: the same footer as the other pages, but the top part is only "Contact us" (brief: organizer contact only) */
+function regFooterHTML() {
+  return `<footer class="ft ft-reg"><div class="ft-in"><div class="ft-top">${contactUsHTML()}</div>
+    ${footerBaseHTML()}
+  </div></footer>`;
+}
+
+function footerHTML() {
+  const pages = visiblePages().map(p =>
+    `<li><button data-go="${p.k}" ${S.page === p.k ? 'aria-current="page"' : ""}>${p.l}</button></li>`).join("");
+  return `<footer class="ft"><div class="ft-in">
+    <div class="ft-top">
+      <div class="ft-ask"><h5 class="ft-h" id="ft-ask-h">Have a question?</h5>
+        <button class="ft-pill" data-ask aria-haspopup="dialog" aria-describedby="ft-ask-h ft-help">
+          <span>Ask us anything</span><i>${svg("right")}</i></button>
+        <p class="ft-help" id="ft-help">We usually reply within a day.</p></div>
+      ${contactUsHTML()}
+      <nav class="ft-pages" aria-labelledby="ft-pages-h"><h5 class="ft-h" id="ft-pages-h">Pages</h5>
+        <ul class="ft-list">${pages}</ul></nav>
+    </div>
+    ${footerBaseHTML()}
+    ${note("Footer: Ask us anything (quick contact form), Contact us, Pages (quick links, follows each page's show/hide). Follow us removed on request. Related Links removed from the footer on request; they stay on the Contact page. Tagline is sample copy.")}
+  </div></footer>`;
+}
+
+/* "Ask us anything": bottom sheet on phone, centered dialog on desktop.
+   What people type is kept in S.ask, so closing by accident loses nothing. */
+function askHTML() {
+  if (!S.askOpen) return "";
+  const a = S.ask;
+  const body = S.askDone
+    ? `<div class="ask-done" role="status"><div class="tick">${svg("check")}</div>
+         <b>Thanks, we got your question.</b><p>We'll reply by email, usually within a day.</p>
+         <button class="btn btn-primary block" data-ask-close>Done</button></div>`
+    : `<form class="form" data-form="ask" novalidate>
+         <div class="field"><label for="a-name">Name <span class="req">*</span></label>
+           <input id="a-name" name="name" required autocomplete="name" value="${esc(a.name)}"></div>
+         <div class="field"><label for="a-email">Email <span class="req">*</span></label>
+           <input id="a-email" name="email" type="email" required autocomplete="email" inputmode="email" value="${esc(a.email)}"></div>
+         <div class="field"><label for="a-q">Your question <span class="req">*</span></label>
+           <textarea id="a-q" name="q" required rows="4">${esc(a.q)}</textarea></div>
+         <button class="btn btn-primary block" type="submit">Send question</button>
+         <a class="ask-alt" href="#" onclick="return false">${svg("contact")} Prefer chat? WhatsApp us</a>
+       </form>`;
+  return `<div class="scrim ask-scrim ${S.askAnim ? "" : "still"}" data-ask-close></div>
+    <div class="ask ${S.askAnim ? "" : "still"}" role="dialog" aria-modal="true" aria-labelledby="ask-t" tabindex="-1">
+      ${S.view === "phone" ? '<div class="grab"></div>' : ""}
+      <div class="ask-head"><h3 id="ask-t">Ask us anything</h3>
+        <button class="ask-x" data-ask-close aria-label="Close">${svg("x")}</button></div>
+      ${S.askDone ? "" : '<p class="ask-sub">We reply by email, usually within a day. All fields are required.</p>'}
+      ${body}
+      ${note("Simple form only: name, email, question. Closing keeps what was typed. Front end only, nothing is sent. Needs an inbox owner before launch.")}
+    </div>`;
+}
+
+function openAsk() {
+  S.askOpen = true; S.askDone = false; S.askAnim = true; S.moreOpen = false;
+  render(false);
+  S.askAnim = false;
+  $(".ask")?.focus({ preventScroll: true });   // move focus into the dialog, keyboard stays down on phone
+}
+
+function closeAsk() {
+  const ask = $(".ask"), scrim = $(".ask-scrim");
+  const done = () => {
+    S.askOpen = false;
+    if (S.askDone) { S.ask = { name:"", email:"", q:"" }; S.askDone = false; }
+    render(false);
+    $("[data-ask]")?.focus({ preventScroll: true });           // return focus to the trigger
+  };
+  if (!ask || matchMedia("(prefers-reduced-motion: reduce)").matches) return done();
+  ask.classList.add("closing"); scrim.classList.add("closing");
+  setTimeout(done, 200);                                       // exit is faster than the 380 ms entry
+}
+
+/* Hotel picker (Registration): type-to-search list of 100+ hotels.
+   Phone: full-screen sheet. Desktop: centered dialog. No "not listed" option: no match shows the organizer line. */
+function hotelListHTML(q) {
+  const words = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const hits = HOTELS.filter(h => words.every(w => h.toLowerCase().includes(w)));
+  if (!hits.length) return `<div class="pk-empty" role="status"><b>No hotel found</b>
+      <p>Can't find your hotel? Contact the organizer</p>
+      <a class="btn btn-wa block" href="#" onclick="return false">${svg("contact")} WhatsApp the organizer</a></div>`;
+  return `<p class="pk-count" role="status">${hits.length} ${hits.length === 1 ? "hotel" : "hotels"}</p>
+    <ul class="pk-list">${hits.map(h => `<li><button type="button" class="pk-item" data-hotel="${esc(h)}" aria-pressed="${S.reg.hotel === h}">
+      <span>${esc(h)}</span>${S.reg.hotel === h ? svg("check") : ""}</button></li>`).join("")}</ul>`;
+}
+function hotelPickerHTML() {
+  if (!S.hotelOpen) return "";
+  const still = S.askAnim ? "" : "still";
+  return `<div class="scrim ask-scrim ${still}" data-hotel-close></div>
+    <div class="ask pk ${still}" role="dialog" aria-modal="true" aria-labelledby="pk-t" tabindex="-1">
+      <div class="ask-head"><h3 id="pk-t">Select your hotel</h3>
+        <button class="ask-x" data-hotel-close aria-label="Close">${svg("x")}</button></div>
+      <div class="pk-search">${svg("search")}<input id="pk-q" type="search" placeholder="Type your hotel name" autocomplete="off" aria-label="Search hotels" value="${esc(S.hotelQ)}"></div>
+      <div class="pk-res" id="pk-res">${hotelListHTML(S.hotelQ)}</div>
+    </div>`;
+}
+function openHotel() {
+  S.hotelOpen = true; S.hotelQ = ""; S.askAnim = true;
+  render(false);
+  S.askAnim = false;
+  $("#pk-q")?.focus({ preventScroll: true });
+}
+function closeHotel() {
+  const box = $(".ask.pk"), scrim = $(".ask-scrim");
+  const done = () => { S.hotelOpen = false; render(false); $("#r-hotel")?.focus({ preventScroll: true }); };
+  if (!box || matchMedia("(prefers-reduced-motion: reduce)").matches) return done();
+  box.classList.add("closing"); scrim.classList.add("closing");
+  setTimeout(done, 200);
+}
+
+/* Registration submit: every problem is shown next to its field, focus goes to the first one. */
+function submitReg() {
+  const R = S.reg, E = {}, mail = R.email.trim().toLowerCase();
+  if (!R.path) E.path = "Choose your role.";
+  else {
+    if (!R.name.trim()) E.name = "Enter your full name.";
+    if (!R.hotel) E.hotel = "Select your hotel from the list.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) E.email = "Enter a valid email address, like name@hotel.com.";
+    else if (S.regEmails.includes(mail)) E.email = `This email is already registered. To change your details, contact the organizer. <a class="rg-wa" href="#" onclick="return false">${svg("contact")} WhatsApp the organizer</a>`;
+    if (R.wa.replace(/\D/g, "").length < 8) E.wa = "Enter your WhatsApp number with country code, like +62 812 0000 0000.";
+    if (R.path === "dos") R.blitz = "yes";                    // mandatory for DOS
+    else if (!R.blitz) E.blitz = "Choose Yes or No.";
+  }
+  S.regErr = E;
+  const first = ["path", "name", "hotel", "email", "wa", "blitz"].find(k => E[k]);
+  if (first) {
+    render(false);
+    document.querySelector({ path:"input[name=path]", name:"#r-name", hotel:"#r-hotel", email:"#r-email", wa:"#r-wa", blitz:"input[name=blitz]" }[first])?.focus();
+    return;
+  }
+  S.regEmails.push(mail); S.regDone = true; render(true);
+  $(".rc-title")?.focus({ preventScroll: true });            // confirmation is announced to screen readers
+}
+
+const emptyBlock = (title, sub, v = "orb") =>
+  `<div class="empty art art-${v}"><div class="shade"></div>
+   <div class="on-img"><b>${esc(title)}</b><span>${esc(sub)}</span></div></div>`;
+
+/* ======================= pages ======================= */
+/* ---- Agenda session card (brief): time on its own larger line; bold title; speaker on its own line (links to
+   Speakers when that page is on); hotel and room on one line, plain text; role badge only on role-specific sessions. ---- */
+const sessPlace = s => s.from ? `From ${HOTEL[s.from]} to ${HOTEL[s.to]}` : HOTEL[s.hotel] + (s.room ? ` · ${s.room}` : "");
+
+function agSpeakerHTML(id) {
+  const p = spkById(id), av = `<span class="ag-av photo"><img src="${p.img}" alt="" loading="lazy" decoding="async"></span>`;
+  return S.on.speakers
+    ? `<button class="ag-spk" data-spk="${id}" aria-label="${esc(p.name)}, open speaker profile">${av}<span>${esc(p.name)}</span>${svg("chev")}</button>`
+    : `<span class="ag-spk static">${av}<span>${esc(p.name)}</span></span>`;
+}
+
+/* Anything under the title that explains the session is a description line (info icon), the same everywhere:
+   a departure's journey, then any extra note. The hotel is a separate location line; a departure's journey replaces it. */
+const agDesc = s => [s.from ? `From ${HOTEL[s.from]} to ${HOTEL[s.to]}` : "", s.note || ""].filter(Boolean);
+
+function agCardHTML(s) {
+  const time = `<p class="ag-t${s.tbc ? " tbc" : ""}">${s.tbc ? svg("clock") : ""}<span>${sessTime(s)}</span>${s.items ? `<span class="ag-cnt">${s.items.length} sessions</span>` : ""}</p>`;
+  const place = x => `<p class="ag-loc">${svg(x.from ? "nav" : "pin")}<span>${esc(sessPlace(x))}</span></p>`;
+  if (s.items) {                                           // sessions that share one time: one block, time on top, items beneath
+    return `<li class="ag pair" id="${s.id}">${time}<div class="ag-main">
+      ${s.items.map(i => `<div class="ag-item" id="${i.id}"><h5 class="ag-h">${ph(i.title)}</h5>${place(i)}</div>`).join("")}
+    </div></li>`;
+  }
+  return `<li class="ag${s.from ? " transfer" : ""}" id="${s.id}">${time}<div class="ag-main">
+    <h5 class="ag-h">${ph(s.title)}</h5>
+    ${agDesc(s).map(t => `<p class="ag-note">${svg("info")}<span>${esc(t)}</span></p>`).join("")}
+    ${(s.spk || []).map(agSpeakerHTML).join("")}
+    ${s.from ? "" : place(s)}
+    ${s.role ? `<p class="ag-role"><span class="role">${esc(s.role)}</span></p>` : ""}
+  </div></li>`;
+}
+
+function pageHome() {
+  const d = defaultDay(), day = DAYS[d - 1];                  // same rule as the Agenda's opening tab
+  const todays = SESSIONS.filter(s => s.day === d).slice(0, 4);
+  const ks = SPEAKERS.find(s => s.main) || SPEAKERS[0];
+  const ksSess = SESSIONS.filter(x => (x.spk || []).includes(ks.id));
+
+  const hero = `<section class="hero art art-ring"><div class="shade"></div>
+    <div class="content">
+      <div class="kicker"><span class="pill">4 days</span><span class="pill">${svg("pin")} ${ph(EVENT.venue)}</span></div>
+      <h2 class="display">${EVENT.tagline.split(", ").map(esc).join(",<br>")}</h2>
+      <div class="meta"><span>${svg("cal")} ${ph(EVENT.dates)}</span></div>
+      ${note("Compact hero: event name, dates and venue name.")}
+    </div></section>`;
+
+  const today = S.on.agenda ? `<section class="sec">
+    <div class="sec-h"><h3>${isEventDay() ? "Today" : "Day " + d} · ${day.wk} ${esc(day.date)}</h3>
+      <button class="more" data-go="agenda" data-day="${d}">Full agenda ${svg("chev")}</button></div>
+    ${!S.ready ? emptyBlock("Program coming soon", "The agenda will appear here.", "ribbon") :
+      `<div class="day-list">${todays.map(s => `<div class="s"><div class="t">${s.tbc ? '<abbr title="Time to be confirmed">TBC</abbr>' : s.start}</div><div>
+        <div class="n">${ph(sessTitle(s))}</div>
+        <div class="r">${esc(sessPlace(s.items ? s.items[0] : s))}${s.spk ? " · " + s.spk.map(i => esc(spkById(i).name)).join(", ") : ""}</div>
+        ${s.role ? `<span class="badge s-role">${esc(s.role)}</span>` : ""}</div></div>`).join("")}</div>`}
+    ${note("Static preview of the day's sessions: today during the event, Monday before it, Thursday after it (same rule as the Agenda's opening tab). Shown only if Agenda is on.")}
+  </section>` : "";
+
+  const venue = S.on.venue && S.ready ? `<section class="sec">
+    <div class="venue-card">${photo(pic("venue", 900, 700), "Venue")}<div class="shade"></div>
+      <div class="on-img"><div><b>${ph(EVENT.venue)}</b><span class="ph" style="font-size:14px">${esc(EVENT.address)}</span></div>
+      <a class="btn btn-glass" href="#" onclick="return false" style="flex:none">${svg("nav")} Directions</a></div></div>
+    ${note("“Get directions” opens the venue map link. Shown only if Venue is on.")}
+  </section>` : "";
+
+  const spk = S.on.speakers ? `<section class="sec">
+    <div class="sec-h"><h3>Main speaker</h3><button class="more" data-go="speakers">All speakers ${svg("chev")}</button></div>
+    ${!S.ready ? emptyBlock("Speakers to be announced", "Check back soon.", "orb") :
+    `<button class="portrait press" data-spk="${ks.id}" style="width:100%;border:0;padding:0;color:inherit;cursor:pointer;text-align:left">
+      ${photo(ks.img, ks.name)}<div class="shade"></div>
+      <div class="top"><span class="pill">Keynote</span><span>${ksSess.map(x => `<span class="badge">Day ${x.day}</span>`).join(" ")}</span></div>
+      <div class="on-img"><div class="nm">${esc(ks.name)}</div><div class="rl">${ph(ks.title)} · ${ph(ks.company)}</div></div>
+    </button>`}
+    ${note("One main speaker card and a See all speakers link. Shown only if Speakers is on.")}
+  </section>` : "";
+
+  // One call-to-action block to the FAQ page (questions + useful links live there). Follows FAQ show/hide.
+  // The whole block is one tap target; on desktop it stretches so its bottom meets the venue card's.
+  const faq = S.on.faq ? `<section class="sec hcta-sec">
+    <button class="hcta art art-ribbon" data-go="faq">
+      <span class="hcta-veil" aria-hidden="true"></span>
+      <span class="hcta-ic" aria-hidden="true">${svg("faq")}</span>
+      <span class="hcta-tx"><b>Have a question?</b><small>Answers and useful links are on the FAQ page.</small></span>
+      <span class="btn btn-primary hcta-btn">See FAQ ${svg("chev")}</span>
+    </button>
+    ${note("Call-to-action banner to the FAQ page. Shown only if FAQ is on.")}
+  </section>` : "";
+
+  const overview = `<section class="sec">
+    <div class="sec-h"><h3>About the summit</h3></div>
+    <p class="lead" style="margin-top:0">${ph("[Two or three sentences: what the summit is, who it is for, and the one objective it serves.]")}</p>
+    <div class="hl-grid" style="margin-top:16px">${HIGHLIGHTS.map(h => `<div class="hl">${photo(h.img, "")}<div class="shade"></div><div class="on-img">${ph(h.label)}</div></div>`).join("")}</div>
+    ${note("Overview: short intro, objective, key highlights. No Gallery teaser on Home.")}
+  </section>`;
+
+  if (S.view === "desktop") return hero + `<div class="wrap"><div class="home-grid"><div>${today}${venue}</div><div class="hg-side">${spk}${faq}</div></div>${overview}</div>`;
+  return hero + `<div class="wrap">${today}${venue}${spk}${faq}${overview}</div>`;
+}
+
+/* Name at the top of a day, from the schedule sheet (days are still numbered 1–4 from Monday elsewhere) */
+const DAY_NOTE = { 2:"Day 1 Conference", 3:"Day 2 Conference" };
+
+function pageAgenda() {
+  const head = `<h2 class="title">Agenda</h2><p class="lead ag-lead">${esc(EVENT.dates)}. All times are Jakarta time (WIB).</p>`;
+  if (!S.ready) return `<div class="wrap">${head}<div class="sec">${emptyBlock("Program coming soon", "The full program will appear here.", "ribbon")}</div>${note("Empty state before content is ready: “Program coming soon”.")}</div>`;
+  const d = curDay(), day = DAYS[d - 1];
+  const dir = S.agPrev && S.agPrev !== d ? (d > S.agPrev ? "fwd" : "back") : "";
+  const full = x => `${x.wd} ${x.date.replace("Feb", "February")} 2027`;
+  // one row of day tabs; the white selection starts on the previous tab and slides to this one (see render)
+  const tabs = DAYS.map(x => {
+    const sel = x.n === d, today = isEventDay() && S.today === x.n;
+    // accessible name starts with the visible text ("Mon 1"), so voice control matches what people see
+    return `<button role="tab" id="tab-${x.n}" data-day-tab="${x.n}" aria-selected="${sel}" aria-controls="ag-panel" tabindex="${sel ? 0 : -1}">Day ${x.n}<span class="sr">, ${full(x)}${today ? ", today" : ""}</span>${today ? '<span class="today" aria-hidden="true"></span>' : ""}</button>`;
+  }).join("");
+  const dayHead = `<div class="ag-day art art-${day.art}"><div class="shade"></div>
+      <div class="ag-day-in">
+        ${isEventDay() && S.today === d || DAY_NOTE[d] ? `<p class="ag-eye">${isEventDay() && S.today === d ? '<span class="ag-today">Today</span>' : ""}${DAY_NOTE[d] ? `<span class="ag-name">${esc(DAY_NOTE[d])}</span>` : ""}</p>` : ""}
+        <h3 class="ag-date">${day.wd}, ${day.date.replace("Feb", "February")}</h3>
+      </div></div>`;
+  // sessions in schedule order, grouped into runs that share a dress code; each run gets one dress-code heading
+  const groups = [];
+  SESSIONS.filter(s => s.day === d).forEach(s => {
+    const last = groups[groups.length - 1];
+    if (last && last.dress === s.dress) last.list.push(s); else groups.push({ dress: s.dress, list: [s] });
+  });
+  const grpHTML = (g, i) => `<section class="dc" aria-labelledby="dc-${d}-${i}">
+      <h4 class="dc-h" id="dc-${d}-${i}"><span class="dc-ic" aria-hidden="true">${svg("hanger")}</span><span class="dc-l">Dress code</span><b>${esc(g.dress)}</b></h4>
+      <ol class="ag-list">${g.list.map(agCardHTML).join("")}</ol>
+    </section>`;
+  return `<div class="wrap agenda">${head}
+    <div class="daytabs" role="tablist" aria-label="Event days" style="--i:${(S.agPrev || d) - 1}">${tabs}</div>
+    ${note("Day tabs in one row: Mon 1, Tue 2, Wed 3, Thu 4 Feb 2027. Opens on today's tab by Jakarta time during the event, on Monday before it and on Thursday after it (try Event timing in the sidebar).")}
+    <div class="ag-panel ${dir}" id="ag-panel" role="tabpanel" aria-labelledby="tab-${d}">
+      ${dayHead}
+      ${groups.map(grpHTML).join("")}
+    </div>
+    ${note("Sessions are grouped by dress code: one heading per run of sessions that share a dress code, so a day can have more than one group (Mon, Wed). Each session is a card: time (“18:30 – Finish” when open-ended, “Time to be confirmed” on Thursday), bold title, speaker linking to Speakers when on, hotel and room as plain text (room once provided), and a role badge in words only on role-specific sessions. No filter, no detail pages. The two Tuesday 16:30 sessions share one block; departure rows show the journey. Schedule from the sheet; speaker session titles are the brief's dummy titles.")}
+  </div>`;
+}
+
+function pageSpeakers() {
+  const head = `<h2 class="title">Speakers</h2><p class="lead">The people on stage across the four days.</p>`;
+  if (!S.ready) return `<div class="wrap">${head}<div class="sec">${emptyBlock("Speakers to be announced", "Check back soon.", "orb")}</div>${note("Empty state before content is ready.")}</div>`;
+  const tiers = [["Keynote","Keynote speakers"],["Host","Hosts"],["Guest","Guests"]];
+  const row = (s, i) => {
+    const no = String(i + 1).padStart(2, "0");
+    const open = !!S.spkOpen[s.id];
+    const sess = SESSIONS.filter(x => (x.spk || []).includes(s.id));
+    const days = [...new Set(sess.map(x => x.day))].map(n => `<span class="badge">Day ${n}</span>`).join("");
+    const links = sess.map(x => S.on.agenda
+      ? `<button class="sp-sess" data-go="agenda" data-day="${x.day}" data-focus="${x.id}"><span class="badge">Day ${x.day}</span><span>${sessStart(x)} · ${ph(x.title)}</span>${svg("right")}</button>`
+      : `<div class="sp-sess static"><span class="badge">Day ${x.day}</span><span>${sessStart(x)} · ${ph(x.title)}</span></div>`).join("");
+    return `<li class="sp" id="spk-${s.id}" data-open="${open}">
+      <button class="sp-head" data-toggle-bio aria-expanded="${open}" aria-controls="bio-${s.id}">
+        <span class="sp-no" aria-hidden="true">${no}</span>
+        <span class="sp-th photo"><img src="${s.img}" alt="" loading="lazy" decoding="async"></span>
+        <span class="sp-tx">
+          <span class="sp-eye"><span class="sp-no-in" aria-hidden="true">${no}</span>${days ? `<span class="sp-days">${days}</span>` : ""}</span>
+          <span class="sp-nm">${esc(s.name)}</span>
+          <span class="sp-rl">${ph(s.title)}<i aria-hidden="true"></i>${ph(s.company)}</span>
+        </span>
+        <span class="sp-tg" aria-hidden="true"></span>
+      </button>
+      <div class="sp-body" id="bio-${s.id}"><div class="sp-in"><div>
+        <p class="sp-bio">${ph("[Short bio, 2–3 sentences: current role, background, and what they will talk about.]")}</p>${links}
+      </div></div></div>
+    </li>`;
+  };
+  const groups = tiers.map(([t, label]) => {
+    const list = SPEAKERS.filter(s => s.tier === t);
+    if (!list.length) return "";
+    return `<section class="sp-grp" aria-labelledby="grp-${t}">
+      <h3 class="grp" id="grp-${t}">${label}<span class="grp-n">${list.length}</span></h3>
+      <ol class="sp-list">${list.map(row).join("")}</ol></section>`;
+  }).join("");
+  return `<div class="wrap">${head}${groups}
+  ${note("Grouped like before: keynote speakers, hosts, guests; numbering restarts in each group. Square photos. Day pills (Day 1, Day 3) show which days each speaker is on stage. Tap a row to open the bio in place (no profile pages); only one row is open at a time. Session links open that day's Agenda tab.")}</div>`;
+}
+
+function pageVenue() {
+  if (!S.ready) return `<div class="wrap"><h2 class="title">Venue</h2><div class="sec">${emptyBlock("Venue details coming soon", "Location and directions will appear here.", "ring")}</div>${note("Empty state before content is ready.")}</div>`;
+  if (S.view === "desktop") {
+    // desktop: page title, then one joined block: map preview (left) + venue panel (right)
+    // with a contained photo, name, address and the one action. No full-width image.
+    const maps = 'href="#" onclick="return false"';
+    const block = (eye, name, address, seed, hint = "") => `<div class="vd">
+          <a class="map vd-map" ${maps} aria-label="Open ${esc(name)} in Google Maps"><span class="pin">${svg("pin", "")}</span><small>Map preview</small></a>
+          <div class="vd-panel">
+            <div class="vd-photo">${photo(pic(seed, 900, 560), name)}</div>
+            <div class="vd-body">
+              <span class="vd-eye">${eye}</span>
+              <h3 class="vd-name">${ph(name)}</h3>
+              <p class="vd-addr">${svg("pin")}<span>${ph(address)}</span></p>
+              <a class="btn btn-primary block" ${maps}>Open in Google Maps ${svg("arrow")}</a>
+              ${hint}
+            </div>
+          </div>
+        </div>`;
+    const hint = S.on.agenda ? `<p class="vd-hint">Rooms for each session are on the <button data-go="agenda">Agenda</button>.</p>` : "";
+    return `<div class="wrap">
+        ${block("Main venue", EVENT.venue, EVENT.address, "venue", hint)}
+        ${block("Table Top venue", EVENT.venue2, EVENT.address2, "venue2")}
+        ${note("Location only, one block per hotel: Aston Serang (main venue) and Aston Kartika Grogol (where Table Top takes place). Each has name, address and Open in Google Maps (the map preview opens it too). Rooms are shown on the Agenda. Arrival info cards from the reference left out: the brief excludes arrival details.")}
+      </div>`;
+  }
+  return `<div class="wrap">
+    <div class="venue-hero">${photo(pic("venue", 1200, 900), "Venue")}<div class="shade"></div>
+      <div class="on-img"><span class="pill">${svg("pin")} Main venue</span>
+        <h2 class="display" style="font-size:38px;margin-top:10px">${ph(EVENT.venue)}</h2>
+        <p class="lead" style="margin-top:6px">${ph(EVENT.address)}</p></div></div>
+    <div class="sec" style="margin-top:20px">
+      <div class="map"><span class="pin">${svg("pin", "")}</span><small>Map preview</small></div>
+      <a class="btn btn-primary block" href="#" onclick="return false" style="margin-top:12px">Open in Google Maps ${svg("arrow")}</a>
+    </div>
+    <div class="sec vs">
+      <span class="vd-eye">Table Top venue</span>
+      <h3 class="vd-name">${ph(EVENT.venue2)}</h3>
+      <p class="vd-addr">${svg("pin")}<span>${ph(EVENT.address2)}</span></p>
+      <div class="map" style="height:150px"><span class="pin">${svg("pin", "")}</span><small>Map preview</small></div>
+      <a class="btn btn-primary block" href="#" onclick="return false" style="margin-top:12px">Open in Google Maps ${svg("arrow")}</a>
+    </div>
+    ${note("Location only, one block per hotel: Aston Serang (main venue) and Aston Kartika Grogol (where Table Top takes place). Each has name, address and Open in Google Maps. Rooms are shown on the Agenda.")}
+  </div>`;
+}
+
+function pageGallery() {
+  const albums = DAYS.map(d => {
+    const stack = `<div class="stack">${d.pics.map((p, i) => photo(pic(p, i ? 400 : 800, i ? 300 : 600), "")).join("")}</div>`;
+    return S.galleryOn[d.n]
+      ? `<a class="album press" href="#" onclick="return false" aria-label="Open ${esc(d.event)} photos in Google Drive">${stack}<div class="shade"></div>
+          <div class="on-img"><div><b>${esc(d.event)}</b><small>${ph(d.date)} · Google Drive</small></div><span class="go">${svg("arrow")}</span></div></a>`
+      : `<button class="album locked" disabled aria-label="Photos after ${esc(d.event)}">${stack}
+          <div class="lock">${svg("lock", "")}<b>Photos after ${esc(d.event)}</b><small>${ph(d.date)}</small></div></button>`;
+  }).join("");
+  return `<div class="wrap"><h2 class="title">Gallery</h2>
+    <p class="lead">Photo albums from each event, on Google Drive.</p>
+    <div class="gal sec" style="margin-top:20px">${albums}</div>
+    ${note("One album per event, all shown from H-5. Each has its own admin toggle (sidebar). Off: locked, “Photos after [event]”. On: opens that event's Google Drive folder in a new tab.")}
+  </div>`;
+}
+
+function pageContact() {
+  const form = S.contactDone
+    ? `<div class="done art art-orb"><div class="shade"></div><div class="on-img"><div class="tick">${svg("check")}</div>
+        <b>Thanks, we'll reply soon.</b><p>Your message is with the organizer.</p>
+        <button class="btn btn-glass" style="margin-top:16px" data-reset-contact>Send another</button></div></div>`
+    : `<form class="form" data-form="contact" novalidate>
+      <div class="field"><label for="c-name">Name <span class="req">*</span></label><input id="c-name" required autocomplete="name"></div>
+      <div class="field"><label for="c-email">Email <span class="req">*</span></label><input id="c-email" type="email" required autocomplete="email" inputmode="email"></div>
+      <div class="field"><label for="c-topic">Topic <span class="req">*</span></label><select id="c-topic" required>
+        <option value="">Choose a topic</option><option>Program</option><option>Venue</option><option>Speakers</option><option>Other</option></select></div>
+      <div class="field"><label for="c-msg">Message <span class="req">*</span></label><textarea id="c-msg" required></textarea></div>
+      <button class="btn btn-primary block" type="submit">Send message</button>
+    </form>`;
+  // reading order from the brief: organizer, "Check the FAQ first", form, WhatsApp
+  return `<div class="wrap ct"><h2 class="title">Contact</h2>
+    <p class="lead">Questions about the summit? We usually reply within a day.</p>
+    <div class="sec" style="margin-top:20px">
+      <div class="org">${photo(face(5), "")}<div><b>${ph(EVENT.organizer)}</b><small>Event organizer</small></div></div>
+      ${S.on.faq ? `<button class="faq-nudge press" data-go="faq">
+          <span class="fn-ic">${svg("faq")}</span>
+          <span class="fn-tx"><b>Check the FAQ first</b><small>Most questions are answered there.</small></span>${svg("chev")}</button>
+        ${note("Shown only when the FAQ page is on.")}` : ""}
+    </div>
+    <div class="sec"><div class="sec-h"><h3>Send a message</h3></div>${form}
+      ${note("Name, email, topic (Program, Venue, Speakers, Other) and message. Responses saved to a Google Sheet (backend later).")}</div>
+    <div class="sec ct-wa"><div class="sec-h"><h3>Prefer to chat?</h3></div>
+      <a class="btn btn-wa block" href="#" onclick="return false">${svg("contact")} Chat on WhatsApp</a>
+      <p class="ct-wa-sub">Opens WhatsApp with a short greeting ready to send.</p>
+      ${note("WhatsApp opens a chat with one organizer number and a short pre-filled greeting.")}
+    </div>
+  </div>`;
+}
+
+function pageFaq() {
+  const head = `<h2 class="title">FAQ</h2><p class="lead">Quick answers before you get in touch.</p>`;
+  if (!S.ready) return `<div class="wrap fq-page">${head}<div class="sec">${emptyBlock("Questions coming soon", "Answers will appear here before the event.", "ribbon")}</div>${note("Empty state before content is ready.")}</div>`;
+  const links = S.related ? `<div class="sec fq-links" style="margin-top:24px"><div class="sec-h"><h3>Useful links</h3></div>
+      <div class="rel">${RELATED.map((r, i) => `<a href="#" onclick="return false" id="ul-${i}"><span class="thumb">${art(r.art)}</span><span>${ph(r.label)}<small>${esc(r.sub)}</small></span>${svg("arrow")}</a>`).join("")}</div>
+      ${note("Useful links (moved from Contact): relevant websites, organizer pages, supporting resources. Own on/off switch (sidebar); hidden whenever FAQ is hidden.")}</div>` : "";
+  const groups = FAQ.map(g => `<section class="fq-grp" aria-labelledby="fqg-${g.topic}">
+      <h3 id="fqg-${g.topic}">${g.topic}<small>${g.items.length}</small></h3>
+      <ul class="fq-list">${g.items.map(q => {
+        const open = S.faqOpen === q.id;
+        const link = q.link != null && S.related
+          ? `<button class="fq-link" data-ul="${q.link}">${svg("arrow")} See ${ph(RELATED[q.link].label)} in Useful links</button>` : "";
+        return `<li class="fq" id="fq-${q.id}" data-open="${open}">
+          <button class="fq-q" data-faq="${q.id}" aria-expanded="${open}" aria-controls="fqa-${q.id}">
+            <span>${esc(q.q)}</span><span class="sp-tg" aria-hidden="true"></span></button>
+          <div class="fq-a" id="fqa-${q.id}" role="region" aria-labelledby="fq-${q.id}"><div><div><p>${esc(q.a)}</p>${link}</div></div></div>
+        </li>`;
+      }).join("")}</ul></section>`).join("");
+  const help = S.on.contact ? `<div class="fq-help"><div><b>Still need help?</b><small>Send the organizer a message.</small></div>
+      <button class="btn btn-primary" data-go="contact">Contact us</button></div>` : "";
+  return `<div class="wrap fq-page">${head}${links}${groups}${help}
+    ${note("Grouped by the contact form topics: Program, Venue, Speakers, Other. Most-asked first in each group, no search. Accordion with one answer open at a time. General questions only (no arrival details or on-site help). Question list is OPEN: content owner to provide; lorem ipsum for now. Not linked from the registration page.")}</div>`;
+}
+
+function pageRegistration() {
+  let body;
+  if (!S.regOpen) {
+    body = `<div class="done art art-ring"><div class="shade"></div><div class="on-img">
+      <div class="tick">${svg("lock")}</div><b>Registration closed</b>
+      <p>Questions? Contact ${ph(EVENT.organizer)}.</p></div></div>
+      ${note("Admin toggle replaces the form with this message.")}`;
+  } else if (S.regDone) {
+    return registrationConfirmed();
+  } else if (S.regStep === 1 || !S.reg.path) {
+    // STEP 1 of 2: choose the role. Two pass-shaped cards on the brand light art; one decision, one action.
+    const R = S.reg, E = S.regErr, dir = S.regDir ? " " + S.regDir : "";
+    const pass = v => `<label class="pass art art-${ROLE[v].art}">
+        <input type="radio" name="path" value="${v}" ${R.path === v ? "checked" : ""}>
+        <span class="pass-veil" aria-hidden="true"></span><span class="pass-slot" aria-hidden="true"></span>
+        <span class="pass-ck" aria-hidden="true">${svg("check")}</span>
+        <span class="pass-tx"><b>${ROLE[v].ab}</b><span>${ROLE[v].title}</span></span></label>`;
+    body = `${stepperHTML(1)}
+      <form class="form rg-panel${dir}" data-form="reg-role" novalidate>
+        <div><h3 class="rg-h" tabindex="-1">Pick your role</h3><p class="rg-sub">It decides which questions come next.</p></div>
+        <fieldset class="field"><legend class="sr">Your role</legend>
+          <div class="passes">${Object.keys(ROLE).map(pass).join("")}</div>
+          ${E.path ? `<p class="f-err" id="err-path" role="alert">${E.path}</p>` : ""}</fieldset>
+        <p class="rg-tap">Tap your role to continue</p>
+      </form>
+      ${note("STEP 1 of 2: tapping a role selects it and moves straight to step 2 (no Continue button). With a keyboard, pick a role and press Enter. The choice is kept if you come back from step 2.")}`;
+  } else {
+    // STEP 2 of 2: details, as one grouped list (label above value in each row), action pinned to the bottom on phone
+    const R = S.reg, E = S.regErr, dir = S.regDir ? " " + S.regDir : "";
+    const err = k => E[k] ? `<p class="f-err" id="err-${k}" role="alert">${E[k]}</p>` : "";
+    const bad = k => E[k] ? " bad" : "";
+    const inv = k => E[k] ? ' aria-invalid="true"' : "";
+    const as = `<div class="as">
+        <span class="as-art art art-${ROLE[R.path].art}" aria-hidden="true"></span>
+        <span class="as-tx"><small>Registering as</small><b>${ROLE[R.path].ab} · ${ROLE[R.path].title}</b></span>
+        <button type="button" class="as-chg" data-reg-back>Change</button></div>`;
+    const rows = `<div class="grp">
+        <div class="row-f${bad("name")}"><label for="r-name">Full name</label>
+          <input id="r-name" name="name" autocomplete="name" placeholder="e.g. Ari Wijaya" value="${esc(R.name)}"${inv("name")}>${err("name")}</div>
+        <div class="row-f${bad("hotel")}"><button type="button" class="row-btn" id="r-hotel" data-hotel-open aria-haspopup="dialog"${inv("hotel")}>
+            <span class="rf-l">Hotel</span><span class="rf-v${R.hotel ? "" : " empty"}">${R.hotel ? esc(R.hotel) : "Search for your hotel"}</span>${svg("chev")}</button>${err("hotel")}</div>
+        <div class="row-f${bad("email")}"><label for="r-email">Email</label>
+          <input id="r-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@hotel.com" value="${esc(R.email)}"${inv("email")}>${err("email")}</div>
+        <div class="row-f${bad("wa")}"><label for="r-wa">WhatsApp number</label>
+          <input id="r-wa" name="wa" type="tel" autocomplete="tel" inputmode="tel" placeholder="+62 812 0000 0000" value="${esc(R.wa)}"${inv("wa")}>${err("wa")}</div>
+      </div>`;
+    const foot = `<p class="grp-foot">All fields are required. We'll send the event site link to this email and WhatsApp number before the event.</p>`;
+    // Table Top: mandatory for DOS (answer fixed to Yes, shown locked with a note); optional Yes/No question for GM, PR and Marcom
+    const must = R.path === "dos";
+    const blitz = `<div class="grp"><div class="row-f row-seg${bad("blitz")}${must ? " locked" : ""}">
+          <span class="rf-l" id="blitz-l">${must ? svg("lock") : ""}Are you joining Table Top?</span>
+          <div class="seg2${must ? " locked" : ""}" role="radiogroup" aria-labelledby="blitz-l"${must ? ' aria-describedby="blitz-must"' : ""}>
+            <label><input type="radio" name="blitz" value="yes" ${must || R.blitz === "yes" ? "checked" : ""} ${must ? "disabled" : ""}><span>Yes</span></label>
+            <label><input type="radio" name="blitz" value="no" ${!must && R.blitz === "no" ? "checked" : ""} ${must ? "disabled" : ""}><span>No</span></label></div>
+          ${must ? `<p class="must" id="blitz-must">Mandatory for DOS. Table Top is part of your registration.</p>` : ""}${err("blitz")}</div></div>`;
+    body = `${stepperHTML(2)}
+    <form class="form rg-panel${dir}" data-form="reg" novalidate>${as}<h3 class="rg-h" tabindex="-1">Your details</h3>${rows}${blitz}${foot}
+      <div class="rg-bar"><button class="btn btn-primary block" type="submit">Register</button></div></form>
+    ${note("STEP 2 of 2: full name, hotel, email, WhatsApp number, then \"Are you joining Table Top?\". DOS: mandatory, so the answer is locked to Yes with a note. GM, PR and Marcom: optional, so they choose Yes or No. Hotel is a required type-to-search list of 100+ hotels (full-screen picker on phone). No \"not listed\" option: no match shows the contact-the-organizer line. A repeated email is blocked (try registered@example.com, or register the same email twice). No consent checkbox for now.")}`;
+  }
+  const compact = S.regOpen && S.regStep === 2 && S.reg.path;          // step 2: smaller hero so the form is in view
+  return `<div class="reg">
+    <section class="reg-hero art art-ring${compact ? " compact" : ""}"><div class="shade"></div><div class="content">
+      <span class="pill">Registration</span>
+      <h2 class="display" style="margin-top:12px">${esc(EVENT.name)}</h2>
+      <div class="meta" style="margin-top:12px"><span>${svg("cal")} ${ph(EVENT.dates)}</span><span>${svg("pin")} ${ph(EVENT.venue)}</span></div>
+    </div></section>
+    <div class="wrap">
+      ${compact ? "" : `<p class="lead" style="margin:16px 0 24px">${ph("[Who should register, and what happens next: you'll get the event site link before the event.]")}</p>`}
+      ${note("Standalone layout: logo on top, no navigation, footer with organizer contact only. Own slug, link shared at H-30. Not linked from the mini site. Two steps: role, then details.")}
+      ${body}
+    </div>
+    ${regFooterHTML()}
+  </div>`;
+}
+
+/* Roles (path) chosen in step 1. Everyone sees the Table Top question: locked to Yes for DOS (mandatory), Yes/No for GM, PR and Marcom (optional). */
+const ROLE = {
+  dos:   { ab:"DOS",    title:"Director of Sales",        art:"ring" },
+  gm:    { ab:"GM",     title:"General Manager",          art:"ribbon" },
+  pr:    { ab:"PR",     title:"Public Relations",         art:"orb" },
+  marcom:{ ab:"Marcom", title:"Marketing Communications", art:"gold" },
+};
+
+/* "Step 1 of 2" indicator (previous version): two bars that fill, plus a text label */
+function stepperHTML(n) {
+  return `<div class="steps" role="group" aria-label="Registration progress">
+    <div class="steps-bars" aria-hidden="true"><i class="on"></i><i class="${n === 2 ? "on" : ""}"></i></div>
+    <p class="steps-t" aria-live="polite"><b>Step ${n} of 2</b> · ${n === 1 ? "Your role" : "Your details"}</p></div>`;
+}
+
+/* Confirmation: its own address (/registration/confirmed), built to be screenshotted.
+   Same for every participant. No links to other pages; only the organizer WhatsApp for changes. */
+function registrationConfirmed() {
+  const R = S.reg;
+  const rows = [["Hotel", R.hotel], ["Email", R.email], ["WhatsApp number", R.wa],
+    ["Joining Table Top", R.path === "dos" ? "Yes · mandatory for DOS" : (R.blitz === "yes" ? "Yes" : "No")]];
+  return `<div class="reg">
+    <div class="wrap wide rc">
+      <div class="rc-grid">
+        <div class="rc-top">
+          <span class="ok-wrap" aria-hidden="true"><svg class="ok" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28"/><path d="M20 33l8 8 16-17"/></svg></span>
+          <h2 class="rc-title" tabindex="-1" role="status">You're registered.</h2>
+          <p class="rc-lead">We'll send the event site link before the event.</p>
+        </div>
+        <article class="tk" aria-label="Your registration">
+          <header class="tk-head art art-ring"><div class="shade"></div><span class="pass-slot" aria-hidden="true"></span>
+            <div class="tk-ev"><span>Registration confirmed</span><b>${esc(EVENT.name)}</b></div></header>
+          <div class="tk-body">
+            <p class="tk-name">${esc(R.name)}</p>
+            <p class="tk-role"><b>${ROLE[R.path].ab}</b> ${ROLE[R.path].title}</p>
+            <dl class="tk-rows">${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
+          </div>
+          <div class="tk-tear" aria-hidden="true"></div>
+          <footer class="tk-stub"><div><small>Dates</small><b>${ph(EVENT.dates)}</b></div><div><small>Venue</small><b>${ph(EVENT.venue)}</b></div></footer>
+        </article>
+        <div class="rc-after">
+          <p class="rc-shot">${svg("camera")} Take a screenshot to keep a copy of your details.</p>
+          <div class="rc-change"><b>Need to change anything?</b><p>Contact the organizer.</p>
+            <a class="btn btn-wa block" href="#" onclick="return false">${svg("contact")} WhatsApp the organizer</a></div>
+        </div>
+      </div>
+      ${note("Confirmation on its own address, /registration/confirmed: the same for every participant. Summary of the entry, a screenshot note, and a contact-the-organizer line for changes. No link to Home or any other page. Opening this address without having registered goes back to the form. Responses saved to one Google Sheet with a Path column (backend later).")}
+    </div>
+    ${regFooterHTML()}
+  </div>`;
+}
+
+/* Tapping/clicking a role card moves straight to step 2, after a beat so the selection (lift + lime ring) is seen.
+   Keyboard: arrow keys only move the selection (they also fire a click with detail 0, which is ignored); Enter continues. */
+let regAdvance = 0;
+document.addEventListener("click", e => {
+  const t = e.target;
+  if (!t.matches?.('[data-form="reg-role"] input[name=path]') || e.detail === 0) return;
+  clearTimeout(regAdvance);
+  regAdvance = setTimeout(regNext, 320);
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.matches?.('[data-form="reg-role"] input[name=path]')) { e.preventDefault(); clearTimeout(regAdvance); regNext(); }
+});
+
+/* step 1 -> step 2 */
+function regNext() {
+  if (!S.reg.path) {
+    S.regErr = { path: "Choose your role to continue." };
+    render(false);
+    document.querySelector("input[name=path]")?.focus({ preventScroll: true });
+    return;
+  }
+  S.regErr = {}; S.regStep = 2; S.regDir = "fwd";
+  render(true);
+  S.regDir = "";
+  $(".rg-h")?.focus({ preventScroll: true });                // announce the new step, keep the keyboard down on phone
+}
+function regBack() {
+  S.regErr = {}; S.regStep = 1; S.regDir = "back";
+  render(true);
+  S.regDir = "";
+  $(".rg-h")?.focus({ preventScroll: true });
+}
+
+const RENDER = { home:pageHome, agenda:pageAgenda, speakers:pageSpeakers, venue:pageVenue, gallery:pageGallery, contact:pageContact, faq:pageFaq, registration:pageRegistration };
+
+/* ======================= render ======================= */
+function renderSide() {
+  $("#pageList").innerHTML = [REG, ...PAGES].map(p => {
+    const off = p.k !== "home" && !S.on[p.k];
+    const sw = p.k === "home"
+      ? `<span class="sw"><input type="checkbox" checked disabled aria-label="Home is always on"></span>`
+      : `<span class="sw"><input type="checkbox" data-vis="${p.k}" ${S.on[p.k] ? "checked" : ""} aria-label="Show ${p.l}"></span>`;
+    return `<div class="pg ${off ? "off" : ""}"><button data-tool-go="${p.k}" aria-current="${S.page === p.k}"><span>${p.l}</span><small>${off ? "Hidden · redirects to Home" : p.sub}</small></button>${sw}</div>`;
+  }).join("");
+  $("#galList").innerHTML = DAYS.map(d =>
+    `<div class="row"><span>Album: ${esc(d.event)}</span><span class="sw"><input type="checkbox" data-gal="${d.n}" ${S.galleryOn[d.n] ? "checked" : ""} aria-label="${esc(d.event)} album live"></span></div>`).join("");
+  document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", S.view === b.dataset.view));
+  const list = DEVICES[S.view], cur = curDevice();
+  $("#sizeSel").innerHTML = list.map(d => `<option value="${d.id}" ${d.id === cur.id ? "selected" : ""}>${d.name} · ${d.w} × ${d.h}</option>`).join("");
+  $("#sizeHint").textContent = cur.cat;
+}
+
+/* Device sizes (viewport = the screen inside the frame). Frame border is added outside it. */
+const DEVICES = {
+  phone: [
+    { id:"s24",       name:"Samsung Galaxy S24", w:360, h:780, cat:"Small · Android" },
+    { id:"iphone16",  name:"iPhone 16",          w:393, h:852, cat:"Medium · Dynamic Island", island:true },
+    { id:"iphone16pm",name:"iPhone 16 Pro Max",  w:440, h:956, cat:"Large · Dynamic Island", island:true },
+  ],
+  desktop: [
+    { id:"desk-s", name:"Small Desktop",  w:1366, h:768,  cat:"Laptop" },
+    { id:"desk-m", name:"Medium Desktop", w:1440, h:900,  cat:"Standard Desktop" },
+    { id:"desk-l", name:"Large Desktop",  w:1920, h:1080, cat:"Full HD Desktop" },
+  ],
+};
+const curDevice = () => DEVICES[S.view].find(d => d.id === S.size[S.view]) || DEVICES[S.view][0];
+
+function fit() {
+  const stage = $("#stage"), fitEl = $("#fit"), dev = $("#device"), cap = $("#cap");
+  const d = curDevice(), b = S.view === "phone" ? 10 : 1;
+  stage.classList.toggle("is-desktop", S.view === "desktop");
+  const W = d.w + 2 * b, H = d.h + 2 * b;
+  if (S.view === "phone" && window.innerWidth <= 520) {      // a real phone is previewing: use the whole screen
+    fitEl.style.width = ""; fitEl.style.height = ""; dev.style.width = ""; dev.style.height = ""; dev.style.transform = "";
+    cap.textContent = CAP_TEXT; return;
+  }
+  dev.style.width = W + "px"; dev.style.height = H + "px";
+  const availH = stage.clientHeight - 72, availW = stage.clientWidth - 48;
+  const s = Math.max(.1, Math.min(1, availH / H, availW / W));
+  dev.style.transform = `scale(${s})`;
+  fitEl.style.width = W * s + "px";
+  fitEl.style.height = H * s + "px";
+  cap.textContent = `${d.name} · ${d.w} × ${d.h}${s < 1 ? ` · shown at ${Math.round(s * 100)}%` : ""}. ${CAP_TEXT}`;
+}
+const CAP_TEXT = "Photos are stand-ins with a brand duotone. Grey text in [brackets] is placeholder copy.";
+
+function render(resetScroll) {
+  renderSide();
+  document.body.classList.toggle("sheet-open", !!(S.moreOpen || S.askOpen || S.hotelOpen));   // hides the gear while a sheet is open
+  // the address follows the state: the confirmation has its own slug (shown in the sidebar for review)
+  const addr = S.page === "registration" && S.regOpen && S.regDone ? "/registration/confirmed" : "/" + S.page;
+  history.replaceState(null, "", "#" + addr); $("#addr").textContent = addr;
+  const dev = $("#device");
+  dev.className = "device " + S.view + (curDevice().island ? " island" : "") + (document.body.classList.contains("show-notes") ? " show-notes" : "");
+  const prev = dev.querySelector(".s-main")?.scrollTop || 0;
+  const isReg = S.page === "registration";
+  dev.innerHTML =
+    `<main class="s-main" id="scroll">${headerHTML()}${RENDER[S.page]()}${isReg ? "" : footerHTML()}</main>` +
+    (!isReg && S.view === "phone" ? bottomBarHTML() : "") +
+    (isReg ? hotelPickerHTML() : askHTML()) +
+    (S.toast ? `<div class="toast" role="status">${esc(S.toast)}</div>` : "");
+  fit();
+  const sc = $("#scroll");
+  sc.style.scrollBehavior = "auto"; sc.scrollTop = resetScroll ? 0 : prev; sc.style.scrollBehavior = "";
+  if (S.agPrev) agendaSwitched(sc);
+  if (S.focus) {
+    const el = document.getElementById(S.focus);
+    if (el) { scrollInDevice(el, "center", "auto"); el.classList.add("flash"); }
+    S.focus = null;
+  }
+  if (S.toast) setTimeout(() => { S.toast = null; dev.querySelector(".toast")?.remove(); }, 2800);
+}
+
+/* Agenda day switch. The tabs were drawn with the selection on the previous day; slide it to the new one.
+   If the tabs were stuck under the header, start the new day at the top of its list, not mid-way down.
+   Focus stays on the chosen tab, so arrow keys keep working (roving tabindex). */
+function switchDay(n) {
+  if (n === curDay()) return;
+  S.agPrev = curDay(); S.agendaDay = n; render(false);
+}
+function agendaSwitched(sc) {
+  const tabs = sc.querySelector(".daytabs"), lead = sc.querySelector(".ag-lead");
+  if (tabs) {
+    void tabs.offsetWidth;                                         // commit the start position before moving
+    tabs.style.setProperty("--i", curDay() - 1);
+    const stuckAt = sc.querySelector(".s-head").offsetHeight;
+    const natural = lead.offsetTop + lead.offsetHeight + parseFloat(getComputedStyle(tabs).marginTop);
+    if (sc.scrollTop > natural - stuckAt) sc.scrollTop = natural - stuckAt;
+    tabs.querySelector('[aria-selected="true"]')?.focus({ preventScroll: true });
+  }
+  S.agPrev = null;
+}
+
+/* Scroll only the device's own screen. scrollIntoView would also scroll the preview page. */
+function scrollInDevice(el, where = "center", behavior = "smooth") {
+  const sc = $("#scroll");
+  const scale = sc.getBoundingClientRect().height / sc.clientHeight || 1;   // phone frame may be scaled
+  const top = (el.getBoundingClientRect().top - sc.getBoundingClientRect().top) / scale + sc.scrollTop;
+  const h = el.getBoundingClientRect().height / scale;
+  const target = where === "center" ? top - (sc.clientHeight - h) / 2 : top - (sc.querySelector(".s-head")?.offsetHeight || 60) - 16;
+  sc.scrollTo({ top: Math.max(0, target), behavior });
+}
+
+/* Phone only: the settings sidebar is a full-screen panel opened with the gear button. */
+function toolsPanel(open, keepFocus) {
+  document.body.classList.toggle("tools-open", open);
+  $("#toolsFab").setAttribute("aria-expanded", open);
+  if (keepFocus) return;
+  (open ? $("#toolsClose") : $("#toolsFab")).focus({ preventScroll: true });
+}
+
+function closeMore() {
+  const sheet = $(".sheet"), scrim = $(".scrim");
+  if (!sheet || matchMedia("(prefers-reduced-motion: reduce)").matches) { S.moreOpen = false; return render(false); }
+  sheet.classList.add("closing"); scrim.classList.add("closing");
+  setTimeout(() => { S.moreOpen = false; render(false); }, 200);
+}
+
+/* ======================= events ======================= */
+document.addEventListener("click", e => {
+  const t = e.target.closest("button, [data-close-more], [data-ask-close], [data-hotel-close]");
+  if (!t || t.disabled) return;
+  const ds = t.dataset;
+  if (t.id === "toolsFab") return toolsPanel(true);
+  if (t.id === "toolsClose") return toolsPanel(false);
+  if (ds.toolGo && document.body.classList.contains("tools-open")) toolsPanel(false, true);   // phone: picking a page closes the settings
+  if ("regBack" in ds) return regBack();
+  if ("hotelOpen" in ds) return openHotel();
+  if ("hotelClose" in ds) return closeHotel();
+  if (ds.hotel != null) { S.reg.hotel = ds.hotel; delete S.regErr.hotel; return closeHotel(); }
+  if (ds.toolGo) return go(ds.toolGo);
+  if (ds.view) { S.view = ds.view; S.moreOpen = false; return render(true); }
+  if (ds.go) return go(ds.go, { day: +ds.day || null, focus: ds.focus });
+  if (ds.spk) { S.spkOpen = { [ds.spk]: true }; return go("speakers", { focus: "spk-" + ds.spk }); }
+  if (ds.dayTab) return switchDay(+ds.dayTab);
+  if ("more" in ds) { if (S.moreOpen) return closeMore(); S.moreOpen = true; return render(false); }
+  if ("closeMore" in ds) return closeMore();
+  if ("ask" in ds) return openAsk();
+  if ("askClose" in ds) return closeAsk();
+  if ("resetContact" in ds) { S.contactDone = false; return render(false); }
+  if (ds.faq) {                                          // FAQ accordion, one answer open at a time, updated in place
+    const item = t.closest(".fq"), open = item.dataset.open !== "true";
+    document.querySelectorAll('.fq[data-open="true"]').forEach(r => {
+      if (r === item) return;
+      r.dataset.open = "false"; r.querySelector(".fq-q").setAttribute("aria-expanded", "false");
+    });
+    S.faqOpen = open ? ds.faq : null;
+    item.dataset.open = open; t.setAttribute("aria-expanded", open);
+    if (open) setTimeout(() => {                           // keep the tapped question in view if one above closed
+      const sc = $("#scroll"), scale = sc.getBoundingClientRect().height / sc.clientHeight || 1;
+      if ((item.getBoundingClientRect().top - sc.getBoundingClientRect().top) / scale < 70) scrollInDevice(item, "top");
+    }, 400);
+    return;
+  }
+  if (ds.ul != null) {                                   // answer link → its Useful links item
+    const el = document.getElementById("ul-" + ds.ul);
+    if (el) { scrollInDevice(el, "center"); el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+    return;
+  }
+  if ("toggleBio" in ds) {                               // update in place so the expand animates
+    const row = t.closest(".sp"), id = row.id.slice(4), open = row.dataset.open !== "true";
+    // accordion: opening one row closes any other open row
+    document.querySelectorAll('.sp[data-open="true"]').forEach(r => {
+      if (r === row) return;
+      r.dataset.open = "false"; r.querySelector(".sp-head").setAttribute("aria-expanded", "false");
+    });
+    S.spkOpen = open ? { [id]: true } : {};
+    row.dataset.open = open; t.setAttribute("aria-expanded", open);
+    // a tall row closing above can push this row out of view; bring its top back once the motion settles
+    if (open) setTimeout(() => {
+      const sc = $("#scroll"), scale = sc.getBoundingClientRect().height / sc.clientHeight || 1;
+      if ((row.getBoundingClientRect().top - sc.getBoundingClientRect().top) / scale < 70) scrollInDevice(row, "top");
+    }, 400);
+  }
+});
+document.addEventListener("submit", e => {
+  const f = e.target.dataset.form; if (!f) return;
+  e.preventDefault();
+  if (f === "reg-role") return regNext();
+  if (f === "reg") return submitReg();
+  const bad = e.target.querySelector(":invalid");
+  if (bad) { bad.focus(); bad.reportValidity(); return; }
+  if (f === "contact") S.contactDone = true;
+  if (f === "ask") { S.askDone = true; render(false); $(".ask")?.focus({ preventScroll: true }); return; }
+  render(true);
+});
+document.addEventListener("change", e => {
+  const t = e.target;
+  if (t.closest?.('[data-form="reg-role"], [data-form="reg"]') && t.type === "radio") {
+    if (t.name === "path") {                                // step 1: no re-render, so the card press feels instant; just arm Continue
+      if (S.reg.path !== t.value) S.reg.blitz = t.value === "dos" ? "yes" : (S.reg.path === "dos" ? null : S.reg.blitz);   // Table Top: DOS is always Yes; leaving DOS clears it
+      S.reg.path = t.value; S.regErr = {};
+      document.getElementById("err-path")?.remove();
+      document.querySelector("[data-reg-next]")?.removeAttribute("aria-disabled");
+    } else if (t.name === "blitz") {
+      S.reg.blitz = t.value; delete S.regErr.blitz;
+      document.getElementById("err-blitz")?.remove(); t.closest(".row-f")?.classList.remove("bad");
+    }
+    return;
+  }
+  if (t.dataset.vis) { S.on[t.dataset.vis] = t.checked; return (!t.checked && S.page === t.dataset.vis) ? go(S.page) : render(false); }
+  if (t.dataset.gal) { S.galleryOn[t.dataset.gal] = t.checked; return render(false); }
+  if (t.id === "sizeSel") { S.size[S.view] = t.value; S.moreOpen = false; return render(false); }
+  if (t.id === "todaySel") { S.today = +t.value; S.agendaDay = null; return render(false); }
+  if (t.id === "readyChk") { S.ready = t.checked; return render(false); }
+  if (t.id === "regOpenChk") { S.regOpen = t.checked; return render(false); }
+  if (t.id === "relChk") { S.related = t.checked; return render(false); }
+  if (t.id === "imgChk") { document.body.classList.toggle("mark-imgs", t.checked); return; }
+  if (t.id === "notesChk") { document.body.classList.toggle("show-notes", t.checked); return render(false); }
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && S.hotelOpen) return closeHotel();
+  if (e.key === "Escape" && S.askOpen) return closeAsk();
+  if (e.key === "Escape" && S.moreOpen) return closeMore();
+  if (e.target.matches?.("[data-day-tab]") && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) {   // tabs pattern: arrows move between days
+    e.preventDefault();
+    const c = curDay(), n = e.key === "Home" ? 1 : e.key === "End" ? DAYS.length : c + (e.key === "ArrowRight" ? 1 : -1);
+    return switchDay(Math.min(DAYS.length, Math.max(1, n)));
+  }
+  if (e.key === "Tab" && (S.askOpen || S.hotelOpen)) {                     // keep keyboard focus inside the dialog
+    const f = [...document.querySelectorAll(".ask button, .ask input, .ask textarea, .ask a[href]")];
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && (document.activeElement === first || document.activeElement === $(".ask"))) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+});
+document.addEventListener("input", e => {                 // keep the draft so closing loses nothing
+  const t = e.target;
+  if (t.closest?.('[data-form="ask"]') && t.name in S.ask) S.ask[t.name] = t.value;
+  if (t.id === "pk-q") { S.hotelQ = t.value; $("#pk-res").innerHTML = hotelListHTML(t.value); return; }   // filter without re-rendering the page
+  if (t.closest?.('[data-form="reg"]') && t.type !== "radio" && t.name in S.reg) {
+    S.reg[t.name] = t.value;
+    if (S.regErr[t.name]) { delete S.regErr[t.name]; document.getElementById("err-" + t.name)?.remove(); t.removeAttribute("aria-invalid"); t.closest(".row-f")?.classList.remove("bad"); }
+  }
+});
+window.addEventListener("resize", fit);
+
+const start = (location.hash.match(/^#\/(\w+)/) || [])[1];
+go(RENDER[start] ? start : "registration");
+</script>
+</body>
+</html>
