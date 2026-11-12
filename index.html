@@ -194,6 +194,15 @@ img{display:block;max-width:100%}
 .desktop .hero{container-type:inline-size}
 @container (max-width:780px){ .desktop .hero h2{font-size:72px} }   /* narrow desktop frame: keep the headline clear of the header */
 
+/* Phone only: the same compact list, with text a step larger and a bit stronger for easier reading */
+.phone .day-prev .sec-h h3{font-size:22px}
+.phone .day-prev .sec-h .more{font-size:16px;min-height:44px}
+.phone .day-list .s{grid-template-columns:66px 1fr;gap:12px}
+.phone .day-list .t{font-size:17px}
+.phone .day-list .n{font-size:17px;line-height:1.35}
+.phone .day-list .r{font-size:15px;color:var(--ink-2)}
+.phone .day-list .t abbr{color:var(--ink-2)}
+.phone .day-list .s-role{height:26px;font-size:14px}
 .day-list{border-radius:var(--r-lg);background:var(--surface);overflow:hidden}
 .day-list .s{display:grid;grid-template-columns:58px 1fr;gap:12px;padding:14px 16px;border-top:1px solid var(--line)}
 .day-list .s:first-child{border-top:0}
@@ -576,14 +585,14 @@ fieldset.field{border:0;margin:0;padding:0;min-width:0}
 .ft-list a:hover,.ft-list button:hover{color:var(--ink)}
 .ft-list button[aria-current="page"]{color:var(--ink);font-weight:700}
 .ft-list button[aria-current="page"]::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--lime)}
-.ft-tag{margin:0;font-size:32px;line-height:1.1;letter-spacing:-.03em;font-weight:300;color:var(--ink)}
+.ft-tag{margin:0;font-size:24px;line-height:1.1;letter-spacing:-.03em;font-weight:300;color:var(--ink)}
 .ft-tag b{display:block;font-weight:900;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .ft-bot{display:flex;flex-direction:column;gap:12px;padding-top:18px;border-top:1px solid var(--line)}
 .ft-by{margin:0;font-size:13px;color:var(--ink-2)}
 .ft-copy{margin:0;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
 .desktop .ft{padding:64px 40px 28px}
 .desktop .ft-in{max-width:1120px;margin:0 auto;gap:56px}
-.desktop .ft-tag{font-size:52px}
+.desktop .ft-tag{font-size:44px}
 /* the footer follows its own width, so the desktop frame works at any preview size */
 .ft{container-type:inline-size}
 @container (min-width:560px){
@@ -911,7 +920,7 @@ fieldset.field{border:0;margin:0;padding:0;min-width:0}
 <script>
 /* ======================= placeholder data ======================= */
 const EVENT = {
-  name:"Archipelago Leadership Summit 2027", tagline:"Legacy in Motion, Future in Focus", dates:"1 – 4 February 2027", venue:"Aston Serang Hotel & Convention Center",
+  name:"Archipelago Leadership Summit 2027", tagline:"Legacy of Hospitality, Future of Possibilities", dates:"1 – 4 February 2027", venue:"Aston Serang Hotel & Convention Center",
   address:"[Street address], [City] [Postcode]", organizer:"[Organizer name]",
   email:"[organizer@email]", wa:"[+00 000 0000 0000]", office:"[Office address], [City]",
 };
@@ -1123,7 +1132,7 @@ function contactUsHTML() {
 
 /* Tagline + "Organized by" + copyright: shared by the main footer and the Registration footer */
 function footerBaseHTML() {
-  return `<p class="ft-tag">Where hospitality <b>commerce meets what's next.</b></p>
+  return `<p class="ft-tag">Turning the company's legacy <b>into momentum for continuous progress and transformation.</b></p>
     <div class="ft-bot">
       <p class="ft-by">Organized by ${ph(EVENT.organizer)}</p>
       <p class="ft-copy">© 2027 ${esc(EVENT.name)}. All rights reserved.</p>
@@ -1311,14 +1320,15 @@ function pageHome() {
 
   const hero = `<section class="hero art art-ring"><div class="shade"></div>
     <div class="content">
-      <div class="kicker"><span class="pill">4 days</span><span class="pill">${svg("pin")} ${ph(EVENT.venue)}</span></div>
+      <div class="kicker"><span class="pill">${svg("pin")} ${ph(EVENT.venue)}</span></div>
       <h2 class="display">${EVENT.tagline.split(", ").map(esc).join(",<br>")}</h2>
       <div class="meta"><span>${svg("cal")} ${ph(EVENT.dates)}</span></div>
       ${note("Compact hero: event name, dates and venue name.")}
     </div></section>`;
 
-  const today = S.on.agenda ? `<section class="sec">
-    <div class="sec-h"><h3>${isEventDay() ? "Today" : "Day " + d} · ${day.wk} ${esc(day.date)}</h3>
+  const dayTitle = `${isEventDay() ? "Today" : "Day " + d} · ${day.wk} ${esc(day.date)}`;
+  const today = S.on.agenda ? `<section class="sec day-prev">
+    <div class="sec-h"><h3>${dayTitle}</h3>
       <button class="more" data-go="agenda" data-day="${d}">Full agenda ${svg("chev")}</button></div>
     ${!S.ready ? emptyBlock("Program coming soon", "The agenda will appear here.", "ribbon") :
       `<div class="day-list">${todays.map(s => `<div class="s"><div class="t">${s.tbc ? '<abbr title="Time to be confirmed">TBC</abbr>' : s.start}</div><div>
