@@ -823,6 +823,45 @@ fieldset.field{border:0;margin:0;padding:0;min-width:0}
 .toast{position:absolute;left:50%;top:calc(var(--head-h,60px) + 12px);z-index:30;transform:translateX(-50%);width:max-content;max-width:86%;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.92);color:#111;font:600 13px/1.35 system-ui,sans-serif;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35);animation:toastIn .35s var(--ease-out)}
 @keyframes toastIn{from{transform:translate(-50%,-12px);opacity:0}}
 
+/* ============================ sponsors ============================ */
+/* Logo: a stand-in mark + white wordmark (svg), sized by the box it sits in */
+.sp-logo{display:block}
+.sp-logo svg{display:block;width:100%;height:auto}
+
+/* Home strip: a quiet credit line, not a feature. Small label, full-color logos with no boxes, 4 per row on phone. */
+.spx{margin-top:20px}
+/* one line: "Supported by" at the start, "See all" at the end */
+.spx-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.spx-h{margin:0;font-size:13px;font-weight:700;color:var(--ink-2);letter-spacing:.01em}
+.spx-all{display:inline-flex;align-items:center;gap:2px;min-height:44px;margin-right:-6px;padding:0 6px;border:0;background:none;color:var(--ink-2);font-weight:700;font-size:13px;cursor:pointer}
+.spx-all .ic{width:15px;height:15px}
+.spx-all:hover{color:var(--ink)}
+/* logos only: 4 per row on phone, one row on desktop; each tap area is 52px tall, the mark 34px */
+.spx-row{list-style:none;margin:2px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px 10px}
+.spx-logo{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;padding:6px 2px;border:0;border-radius:12px;background:none;color:inherit;cursor:pointer;transition:background .2s,transform .12s ease-out}
+.spx-logo:hover{background:rgba(255,255,255,.06)}
+.spx-logo .sp-logo{width:34px}
+/* tight under the hero: the hero's own bottom padding is the gap (was 66px on phone, 96px on desktop) */
+.wrap.has-spx,.desktop .wrap.has-spx{padding-top:0}
+/* room between the logos and the next section. On phone the next section's own 36px top margin merges with this one
+   (the larger wins), so phone needs a bigger value than desktop, where the next block sits inside a grid. */
+.has-spx > .spx{margin-top:0;margin-bottom:56px}
+.desktop .has-spx > .spx{margin-bottom:36px}
+.desktop .spx-row{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:12px}
+.desktop .spx-logo{min-height:60px}
+.desktop .spx-logo .sp-logo{width:40px}
+
+/* Sponsors page: one card per sponsor, logo on a quiet plate, name, description, optional website button */
+.spc-list{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:14px}
+.desktop .spc-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.spc{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:18px 18px 20px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line)}
+.spc-logo{align-self:stretch;display:flex;align-items:center;min-height:76px;padding:14px 18px;border-radius:var(--r-md);background:var(--surface-2)}
+.spc-logo .sp-logo{width:190px;max-width:100%}
+.spc-n{margin:4px 0 0;font-size:20px;font-weight:800;line-height:1.3;letter-spacing:-.01em}
+.spc-d{margin:0;font-size:17px;line-height:1.55;color:var(--ink-2)}
+.spc-web{margin-top:6px;min-height:48px;font-size:16px}
+.desktop .spc-web{margin-top:auto}
+
 /* ============================ responsive tool ============================ */
 @media (max-width:900px){
   .app{grid-template-columns:1fr;grid-template-rows:auto 1fr;height:auto;min-height:100dvh;overflow:visible}
@@ -850,8 +889,8 @@ fieldset.field{border:0;margin:0;padding:0;min-width:0}
 /* ============================ image-asset marker (review tool) ============================ */
 /* "Mark image assets" (sidebar > Review): swaps every image slot for the flat magenta supplied by the team (#ff43fc).
    Overlays, text and layout stay as they are, so you see exactly where image assets go. Off by default. */
-.mark-imgs .photo,.mark-imgs .art{background:#ff43fc!important}
-.mark-imgs .photo img{visibility:hidden}
+.mark-imgs .photo,.mark-imgs .art,.mark-imgs .sp-logo{background:#ff43fc!important}
+.mark-imgs .photo img,.mark-imgs .sp-logo svg{visibility:hidden}
 .mark-imgs .photo::after,.mark-imgs .photo::before,.mark-imgs .art::before,.mark-imgs .art::after{display:none!important}
 .mark-imgs img.logo{aspect-ratio:2/1;content:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='1'%3E%3Crect width='2' height='1' fill='%23ff43fc'/%3E%3C/svg%3E")}
 
@@ -908,7 +947,7 @@ fieldset.field{border:0;margin:0;padding:0;min-width:0}
     <h2>Review</h2>
     <div class="row"><span>Show brief notes</span><span class="sw"><input type="checkbox" id="notesChk" aria-label="Show brief notes"></span></div>
     <div class="row"><span>Mark image assets</span><span class="sw"><input type="checkbox" id="imgChk" aria-label="Mark image assets in magenta"></span></div>
-    <p class="hint">Fills every photo, brand light-art and the logo with flat magenta, so you can see which items are image assets. Nothing else changes.</p>
+    <p class="hint">Fills every photo, brand light-art, the event logo and the sponsor logos with flat magenta, so you can see which items are image assets. Nothing else changes.</p>
   </aside>
 
   <main class="stage" id="stage">
@@ -1006,7 +1045,35 @@ const PAGES = [
   { k:"gallery", l:"Gallery", sub:"Drive photo albums" },
   { k:"contact", l:"Contact", sub:"Form and WhatsApp" },
   { k:"faq", l:"FAQ", sub:"Questions and useful links" },
+  { k:"sponsors", l:"Sponsors", sub:"Who supports the event" },
 ];
+/* Sponsors, in the organizer's order, no tiers. The final list is not confirmed (about 8 projected), so these are
+   placeholders: stand-in logo marks, [bracketed] names and a ~300-character description. url:"" = the sponsor gave no
+   link, so the card has no "Visit website" button. */
+const SP_TEXT = "[About 300 characters from the sponsor: who they are, what they do and how they support the summit. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.]";
+const SPONSORS = ["A","B","C","D","E","F","G","H"].map((x, i) =>
+  ({ id:"s" + (i + 1), name:`[Sponsor ${x}]`, mark:i, text:SP_TEXT, url: i % 3 === 2 ? "" : "#" }));
+/* Stand-in logo marks: one colour and shape each, white wordmark, so they read on the dark page like a negative logo. */
+const SP_MARKS = [
+  ["#00e0ff", '<circle cx="18" cy="18" r="14"/>'],
+  ["#ff3fc8", '<rect x="4" y="4" width="28" height="28" rx="8"/>'],
+  ["#c8ff3d", '<path d="M18 3 33 31H3z"/>'],
+  ["#ffb020", '<path d="M18 2 32 10v16L18 34 4 26V10z"/>'],
+  ["#a493ff", '<path d="M18 2 34 18 18 34 2 18z"/>'],
+  ["#3ddc97", '<rect x="4" y="5" width="11" height="26" rx="3"/><rect x="19" y="11" width="11" height="20" rx="3"/>'],
+  ["#ff6b4a", '<circle cx="18" cy="18" r="12" fill="none" stroke-width="7"/>'],
+  ["#5ab0ff", '<path d="M18 2l4.7 10.3L34 13l-8.3 7.7L28 32l-10-5.6L8 32l2.3-11.3L2 13l11.3-.7z"/>'],
+];
+const spName = s => s.name.replace(/[[\]]/g, "");
+/* markOnly: the Home strip shows the logo alone, with no name (wordmark) */
+const spLogo = (s, markOnly) => {
+  const [c, m] = SP_MARKS[s.mark % SP_MARKS.length];
+  const mark = `<g fill="${c}" stroke="${c}" stroke-width="0">${m}</g>`;
+  return `<span class="sp-logo${markOnly ? " mark" : ""}" role="img" aria-label="${esc(spName(s))} logo">${markOnly
+    ? `<svg viewBox="0 0 36 36" aria-hidden="true">${mark}</svg>`
+    : `<svg viewBox="0 0 150 36" aria-hidden="true">${mark}
+    <text x="44" y="25" fill="#f6f3ff" font-size="18" font-weight="800" font-family="Zen Kaku Gothic New, system-ui, sans-serif">${esc(spName(s))}</text></svg>`}</span>`;
+};
 const REG = { k:"registration", l:"Registration", sub:"Own slug · shared at H-30" };
 
 /* stroke icons, one family (1.8px, round) */
@@ -1035,6 +1102,7 @@ const IC = {
   back:'<path d="m15 6-6 6 6 6"/>',
   camera:'<path d="M4 8.5A2.5 2.5 0 0 1 6.5 6H8l1.2-2h5.6L16 6h1.5A2.5 2.5 0 0 1 20 8.5v8a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5z"/><circle cx="12" cy="12.5" r="3.4"/>',
   faq:'<circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.4c-.6.3-1 .8-1 1.5v.5M12 16.8v.01"/>',
+  sponsors:'<circle cx="12" cy="9" r="6"/><path d="m8.6 13.9-1.6 7.1 5-2.8 5 2.8-1.6-7.1"/>',
   hanger:'<path d="M10 5.5a2 2 0 1 1 2 2v1.6M12 9.1 3.6 15.2a1.2 1.2 0 0 0 .7 2.2h15.4a1.2 1.2 0 0 0 .7-2.2L12 9.1"/>',
   bus:'<rect x="4.5" y="3.5" width="15" height="14" rx="3"/><path d="M4.5 11h15M8 17.5V20M16 17.5V20M8.5 14.3h.01M15.5 14.3h.01"/>',
   info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8v.01"/>',
@@ -1045,7 +1113,7 @@ const svg = (k, cls = "ic") => `<svg class="${cls}" viewBox="0 0 24 24" fill="no
 const S = {
   page:"registration", view:"phone",
   size:{ phone:"iphone16", desktop:"desk-m" },           // chosen device per view (Device > Size)
-  on:{ registration:true, agenda:true, speakers:true, venue:true, gallery:true, contact:true, faq:true },
+  on:{ registration:true, agenda:true, speakers:true, venue:true, gallery:true, contact:true, faq:true, sponsors:true },
   today:0, ready:true, regOpen:true, related:true,
   galleryOn:{ 1:false, 2:false, 3:false, 4:false },
   regDone:false, contactDone:false, agendaDay:null,
@@ -1104,17 +1172,17 @@ function headerHTML() {
 function bottomBarHTML() {
   const vis = visiblePages();
   let direct = vis, more = [];
-  if (vis.length > 5) {               // four main tabs + More (Gallery, Contact, FAQ)
+  if (vis.length > 5) {               // four main tabs + More (Gallery, Contact, FAQ, Sponsors)
     direct = vis.filter(p => ["home","agenda","speakers","venue"].includes(p.k));
-    more = vis.filter(p => ["gallery","contact","faq"].includes(p.k));
+    more = vis.filter(p => ["gallery","contact","faq","sponsors"].includes(p.k));
   }
   const moreActive = more.some(p => p.k === S.page);
   let h = direct.map(p => `<button data-go="${p.k}" ${S.page === p.k ? 'aria-current="page"' : ""}>${svg(p.k, "")}${p.l}</button>`).join("");
   if (more.length) h += `<button data-more aria-haspopup="dialog" aria-expanded="${S.moreOpen}" ${moreActive ? 'aria-current="page"' : ""}>${svg("more", "")}More</button>`;
   let sheet = "";
   if (S.moreOpen) {
-    const thumbs = { gallery: photo(pic("award2", 200, 200)), contact: art("orb"), faq: art("ribbon") };
-    const subs = { gallery:"Event photo albums", contact:"Message the organizer", faq:"Questions and useful links" };
+    const thumbs = { gallery: photo(pic("award2", 200, 200)), contact: art("orb"), faq: art("ribbon"), sponsors: art("gold") };
+    const subs = { gallery:"Event photo albums", contact:"Message the organizer", faq:"Questions and useful links", sponsors:"Who supports the event" };
     sheet = `<div class="scrim" data-close-more></div>
       <div class="sheet" role="dialog" aria-label="More pages"><div class="grab"></div>
       ${more.map(p => `<button class="item press" data-go="${p.k}"><span class="thumb">${thumbs[p.k]}</span><span><b>${p.l}</b><small>${subs[p.k]}</small></span>${svg("chev")}</button>`).join("")}</div>`;
@@ -1375,8 +1443,17 @@ function pageHome() {
     ${note("Overview: short intro, objective, key highlights. No Gallery teaser on Home.")}
   </section>`;
 
-  if (S.view === "desktop") return hero + `<div class="wrap"><div class="home-grid"><div>${today}${venue}</div><div class="hg-side">${spk}${faq}</div></div>${overview}</div>`;
-  return hero + `<div class="wrap">${today}${venue}${spk}${faq}${overview}</div>`;
+  // Sponsor strip, right after the hero: small, full-color logos, no boxes or carousel. A logo opens that sponsor's card.
+  const sponsors = S.on.sponsors && S.ready && SPONSORS.length ? `<section class="sec spx" aria-labelledby="spx-h">
+    <div class="spx-top"><h3 class="spx-h" id="spx-h">Supported by</h3>
+      <button class="spx-all" data-go="sponsors" aria-label="See all sponsors">See all ${svg("chev")}</button></div>
+    <ul class="spx-row">${SPONSORS.slice(0, 8).map(s => `<li><button class="spx-logo press" data-go="sponsors" data-focus="sp-${s.id}" aria-label="${esc(spName(s))}, open on the Sponsors page">${spLogo(s, true)}</button></li>`).join("")}</ul>
+    ${note("Sponsor strip right after the hero: “Supported by” with a “See all” link on the same line, then the logos only (no names), full color but small, 4 per row on phone and one row on desktop, no boxes, borders or carousel, in the organizer's order. A logo opens that sponsor on the Sponsors page. Shows the first 8. Shown only if Sponsors is on.")}
+  </section>` : "";
+
+  const wrapCls = sponsors ? "wrap has-spx" : "wrap";           // has-spx: the strip sits close under the hero (see CSS)
+  if (S.view === "desktop") return hero + `<div class="${wrapCls}">${sponsors}<div class="home-grid"><div>${today}${venue}</div><div class="hg-side">${spk}${faq}</div></div>${overview}</div>`;
+  return hero + `<div class="${wrapCls}">${sponsors}${today}${venue}${spk}${faq}${overview}</div>`;
 }
 
 /* Name at the top of a day, from the schedule sheet (days are still numbered 1–4 from Monday elsewhere) */
@@ -1551,6 +1628,23 @@ function pageContact() {
       <p class="ct-wa-sub">Opens WhatsApp with a short greeting ready to send.</p>
       ${note("WhatsApp opens a chat with one organizer number and a short pre-filled greeting.")}
     </div>
+  </div>`;
+}
+
+/* Sponsors: one card per sponsor in the organizer's order (no tiers): logo, name, ~300-character description,
+   optional "Visit website" (new tab). Each card is where a logo tap on Home lands (id sp-<id>). */
+function pageSponsors() {
+  const head = `<h2 class="title">Sponsors</h2><p class="lead">The partners who support the summit.</p>`;
+  if (!S.ready || !SPONSORS.length) return `<div class="wrap">${head}<div class="sec" style="margin-top:20px">${emptyBlock("Sponsors to be announced", "Check back soon.", "gold")}</div>${note("Empty state before content is ready: “Sponsors to be announced”.")}</div>`;
+  const cards = SPONSORS.map(s => `<li class="spc" id="sp-${s.id}">
+      <div class="spc-logo">${spLogo(s)}</div>
+      <h3 class="spc-n">${ph(s.name)}</h3>
+      <p class="spc-d">${ph(s.text)}</p>
+      ${s.url ? `<a class="btn btn-glass spc-web" href="#" onclick="return false" target="_blank" rel="noopener">Visit website ${svg("arrow")}<span class="sr"> (opens in a new tab)</span></a>` : ""}
+    </li>`).join("");
+  return `<div class="wrap">${head}
+    <ul class="spc-list">${cards}</ul>
+    ${note("One card per sponsor in the organizer's order, no tiers: logo, name in bold, a description of about 300 characters, and a Visit website button only when the sponsor gives a link (opens in a new tab). Logos are stand-ins. In the phone More menu and the desktop header; hiding the page also hides the Home strip. Not linked from the registration page.")}
   </div>`;
 }
 
@@ -1739,7 +1833,7 @@ function regBack() {
   $(".rg-h")?.focus({ preventScroll: true });
 }
 
-const RENDER = { home:pageHome, agenda:pageAgenda, speakers:pageSpeakers, venue:pageVenue, gallery:pageGallery, contact:pageContact, faq:pageFaq, registration:pageRegistration };
+const RENDER = { home:pageHome, agenda:pageAgenda, speakers:pageSpeakers, venue:pageVenue, gallery:pageGallery, contact:pageContact, faq:pageFaq, sponsors:pageSponsors, registration:pageRegistration };
 
 /* ======================= render ======================= */
 function renderSide() {
